@@ -1,0 +1,1008 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #2563eb;
+  --color-brand-600: #1d4ed8;
+  --color-brand-700: #1e40af;
+  --color-brand-800: #1e3a8a;
+  --color-brand-900: #1e3a8a;
+  --color-brand-950: #172554;
+}
+
+:root {
+  --app-height: 100vh;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --app-height: 100dvh;
+  }
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body,
+#login-screen,
+#main-app {
+  min-height: var(--app-height);
+  height: var(--app-height);
+}
+
+#main-sidebar {
+  min-height: var(--app-height);
+}
+
+/* Main app container - ocupa toda a tela */
+#main-app {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
+
+#main-app > aside {
+  flex-shrink: 0;
+}
+
+#main-app > main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ============================================
+   LAYOUT PRINCIPAL - Correção do espaço extra
+   ============================================
+
+   Estrutura:
+   - #main-app: container principal (100vw x 100vh)
+   - aside (sidebar): largura fixa, não encolhe
+   - main (#main-content-scroll): flexível, ocupa espaço restante
+   - header: sticky no topo (flex-shrink: 0)
+   - .main-content-wrapper: conteúdo scrollável (flex: 1)
+
+   Isso garante que:
+   1. O app ocupe toda a tela (viewport)
+   2. O conteúdo principal ocupe toda a largura disponível
+   3. O scroll funcione apenas no conteúdo principal
+   ============================================ */
+
+/* Garantir que em telas grandes o conteúdo ocupe toda a largura */
+@media (min-width: 1280px) {
+  .main-content-wrapper {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Main content scroll - configuração completa */
+#main-content-scroll {
+  min-height: var(--app-height);
+  height: 100%;
+  min-width: 0;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Container de conteúdo principal - garante que ocupe espaço flexível */
+.main-content-wrapper {
+  flex: 1 1 0%;
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Garantir que todo o conteúdo dentro do wrapper ocupe largura total */
+.main-content-wrapper > * {
+  width: 100%;
+  max-width: 100%;
+}
+
+.main-content-wrapper .tab-content {
+  width: 100%;
+  max-width: none;
+}
+
+/* Header sticky deve ficar no topo */
+#main-content-scroll > header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  flex-shrink: 0;
+}
+
+.hidden-tab {
+  display: none !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Toasts */
+#toast-container {
+  z-index: 9999;
+  pointer-events: none;
+}
+.toast-item {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(120%);
+  opacity: 0;
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
+}
+.toast-item.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* QR Code Video */
+#reader video {
+  border-radius: 1rem;
+  object-fit: contain;
+  background-color: #000;
+}
+
+/* Overrides - usados apenas para sidebar colapsada */
+#main-sidebar .text-slate-400 {
+  color: #94a3b8 !important;
+}
+#main-sidebar .text-slate-500 {
+  color: #64748b !important;
+}
+
+#main-sidebar.lg\:w-20 .nav-btn,
+#main-sidebar.lg\:w-20 #btn-logout-sidebar {
+  justify-content: center !important;
+}
+#main-sidebar.lg\:w-20 .h-20 {
+  justify-content: center !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+#main-sidebar.lg\:w-20 .nav-btn span,
+#main-sidebar.lg\:w-20 #btn-logout-sidebar span,
+#main-sidebar.lg\:w-20 p.uppercase,
+#main-sidebar.lg\:w-20 #sidebar-logo-text {
+  display: none !important;
+}
+
+.btn-standard {
+  min-height: 3rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  gap: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-standard-sm {
+  min-height: 2.6rem;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+.btn-icon-standard {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-500/20;
+}
+.btn-primary {
+  @apply bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-600/20;
+}
+.btn-secondary {
+  @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm;
+}
+.btn-tertiary {
+  @apply bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700;
+}
+.btn-danger {
+  @apply bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/20;
+}
+.btn-ghost {
+  @apply bg-transparent text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800;
+}
+.btn-icon {
+  @apply inline-flex items-center justify-center rounded-xl transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-500/20;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+}
+
+.panel-card {
+  @apply rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm;
+}
+.panel-content {
+  @apply p-4 sm:p-5 space-y-4;
+}
+.panel-header {
+  @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3;
+}
+.panel-title {
+  @apply text-xl md:text-3xl font-black text-slate-900 dark:text-white;
+}
+.panel-subtitle {
+  @apply text-xs md:text-base text-slate-500 dark:text-slate-400 mt-0.5 md:mt-1;
+}
+.panel-actions {
+  @apply flex flex-wrap items-center gap-3 justify-end;
+}
+
+/* Animations */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* EXTRA SMALL - Mobile Phones (< 375px) */
+@media (max-width: 374px) {
+  body {
+    font-size: 0.875rem;
+  }
+  .stat-card {
+    padding: 0.75rem;
+  }
+  .stat-card .stat-number {
+    font-size: 1.5rem;
+  }
+  .stat-card .stat-label {
+    font-size: 0.75rem;
+  }
+  .header-title {
+    font-size: 0.875rem;
+  }
+  .dashboard-grid,
+  .tool-card,
+  table {
+    font-size: 0.875rem;
+  }
+  button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* SMALL - Mobile (375px - 479px) */
+@media (min-width: 375px) and (max-width: 479px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .stat-card {
+    padding: 1rem;
+  }
+  .stat-card .stat-number {
+    font-size: 1.75rem;
+  }
+  .header-controls {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .header-title {
+    font-size: 1rem;
+  }
+  .tool-card {
+    padding: 1rem;
+  }
+  table {
+    font-size: 0.875rem;
+  }
+  td,
+  th {
+    padding: 0.5rem;
+  }
+  button {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* MEDIUM - Tablet Small (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  #main-sidebar .nav-btn,
+  #main-sidebar #btn-logout-sidebar {
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  #main-sidebar .h-20 {
+    justify-content: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  .stat-card {
+    padding: 1rem;
+  }
+  .stat-card .stat-number {
+    font-size: 1.75rem;
+  }
+  .header-controls {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .header-title {
+    font-size: 1.25rem;
+  }
+  .tool-card {
+    padding: 1.25rem;
+  }
+  table {
+    font-size: 0.9rem;
+  }
+}
+
+/* LARGE - Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  .stat-card {
+    padding: 1.25rem;
+  }
+  .stat-card .stat-number {
+    font-size: 2rem;
+  }
+  .header-controls {
+    gap: 1rem;
+  }
+  .header-title {
+    font-size: 1.5rem;
+  }
+  .tool-card {
+    padding: 1.5rem;
+  }
+  table {
+    font-size: 0.95rem;
+  }
+}
+
+/* EXTRA LARGE - Desktop (1024px - 1535px) */
+@media (min-width: 1024px) and (max-width: 1535px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+  .stat-card {
+    padding: 1.5rem;
+  }
+}
+
+/* Global grid helpers for consistent layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+@media (min-width: 480px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+@media (min-width: 1536px) {
+  .dashboard-grid {
+    gap: 1.75rem;
+  }
+  .stats-grid {
+    gap: 1.25rem;
+  }
+}
+
+/* 2XL - Large Desktop (1536px+) */
+@media (min-width: 1536px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  .stat-card {
+    padding: 1.75rem;
+  }
+  .stat-card .stat-number {
+    font-size: 2.5rem;
+  }
+  .main-content-wrapper {
+    max-width: 1920px;
+    margin: 0 auto;
+  }
+}
+
+/* ============================================
+   ORIENTATION-SPECIFIC STYLES
+   ============================================ */
+
+/* Landscape mode optimizations */
+@media (orientation: landscape) and (max-height: 500px) {
+  #main-sidebar {
+    width: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .nav-btn span {
+    display: none;
+  }
+  #main-sidebar.lg\:w-72 {
+    width: 5rem;
+  }
+}
+
+/* Portrait mode optimizations */
+@media (orientation: portrait) {
+  body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+/* Print styles */
+@media print {
+  #main-sidebar,
+  .header-controls,
+  #toast-container {
+    display: none !important;
+  }
+  #main-content-scroll {
+    overflow: visible !important;
+  }
+}
+
+/* Touch optimizations */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  [role='button'],
+  input[type='button'],
+  input[type='submit'] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Prevent zoom on input focus for iOS */
+@supports (-webkit-touch-callout: none) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* ============================================
+   IMPROVEMENTS: Tool Cards & Dashboard
+   ============================================ */
+
+/* Tool card hover effect with animation */
+.tool-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.4s ease-out;
+  position: relative;
+}
+
+.tool-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+}
+
+.tool-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.tool-card:hover::after {
+  opacity: 1;
+}
+
+/* Fade-in animation for cards */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Staggered animation delay for cards */
+.tool-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.tool-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.tool-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.tool-card:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.tool-card:nth-child(5) {
+  animation-delay: 0.25s;
+}
+.tool-card:nth-child(6) {
+  animation-delay: 0.3s;
+}
+.tool-card:nth-child(7) {
+  animation-delay: 0.35s;
+}
+.tool-card:nth-child(8) {
+  animation-delay: 0.4s;
+}
+.tool-card:nth-child(9) {
+  animation-delay: 0.45s;
+}
+
+/* Quick filter buttons */
+.quick-filter-btn {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.quick-filter-btn:hover {
+  filter: brightness(0.95);
+}
+
+.quick-filter-btn.active {
+  filter: brightness(0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Stat card hover effect */
+.stat-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Sort dropdown styling */
+.sort-select {
+  transition: all 0.2s ease;
+}
+
+.sort-select:hover {
+  border-color: #3b82f6;
+}
+
+/* Empty state animation */
+.empty-state {
+  animation: fadeInSimple 0.5s ease-out;
+}
+
+@keyframes fadeInSimple {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   SCANNER IMPROVEMENTS
+   ============================================ */
+
+/* Scanner icon animation */
+.scanner-icon {
+  animation: pulse-scan 2s ease-in-out infinite;
+}
+
+@keyframes pulse-scan {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+/* Scanner input focus animation */
+.scanner-input:focus {
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0%,
+  100% {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  50% {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.2);
+  }
+}
+
+/* Scan line animation for camera mode */
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #10b981, transparent);
+  animation: scan-move 2s ease-in-out infinite;
+}
+
+@keyframes scan-move {
+  0%,
+  100% {
+    top: 10%;
+  }
+  50% {
+    top: 90%;
+  }
+}
+
+/* Quick action buttons hover */
+#scanner-quick-actions button {
+  position: relative;
+  overflow: hidden;
+}
+
+#scanner-quick-actions button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.3s,
+    height 0.3s;
+}
+
+#scanner-quick-actions button:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+/* Recent scans animation */
+.recent-scan-item {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Success/Error feedback animation */
+.scan-success {
+  animation: successPulse 0.6s ease-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.scan-error {
+  animation: errorShake 0.5s ease-out;
+}
+
+@keyframes errorShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+/* ============================================
+   USER MANAGEMENT IMPROVEMENTS
+   ============================================ */
+
+/* Filter buttons */
+.filter-btn {
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn.active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.inv-filter-btn.active {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+/* Inventory toolbar styles */
+.inventory-actions {
+  width: 100%;
+}
+
+.inventory-actions-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.inventory-action-button {
+  min-width: 10rem;
+}
+
+.inventory-view-switch {
+  min-width: 12rem;
+  justify-content: flex-end;
+}
+
+.inventory-view-btn {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.inventory-view-btn:hover {
+  transform: translateY(-1px);
+}
+
+.inventory-view-btn.active,
+.inventory-view-btn[aria-pressed='true'] {
+  background-color: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+}
+
+/* User counter cards */
+#users-counters > div {
+  transition: all 0.3s ease;
+}
+
+#users-counters > div:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Avatar initials */
+.w-12.h-12.rounded-xl {
+  transition: all 0.2s ease;
+}
+
+.w-12.h-12.rounded-xl:hover {
+  transform: scale(1.05);
+}
+
+/* User card hover improvements */
+#user-management-body > div {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#user-management-body > div:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Sort buttons */
+.sort-btn {
+  transition: all 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sort-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Sort indicators */
+.sort-indicator {
+  display: inline-block;
+  transition: all 0.2s ease;
+  opacity: 0;
+}
+
+.sort-indicator.active {
+  opacity: 1;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Enhanced tooltips */
+[title] {
+  position: relative;
+}
+
+/* Card improvements */
+/* ============================================
+   PHASE 3: PAGINATION, BATCH ACTIONS & EMPTY STATE
+   ============================================ */
+
+/* Pagination buttons */
+.pagination-btn {
+  transition: all 0.2s ease;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Checkbox styling */
+input[type='checkbox'] {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type='checkbox']:checked {
+  transform: scale(1.1);
+}
