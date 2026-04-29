@@ -38,7 +38,7 @@ export class NotificationManager {
       type: 'success',
       message,
       duration: options.duration || 3000,
-      ...options,
+      ...options
     });
   }
 
@@ -50,7 +50,7 @@ export class NotificationManager {
       type: 'error',
       message,
       duration: options.duration || 5000,
-      ...options,
+      ...options
     });
   }
 
@@ -62,7 +62,7 @@ export class NotificationManager {
       type: 'warning',
       message,
       duration: options.duration || 4000,
-      ...options,
+      ...options
     });
   }
 
@@ -74,7 +74,7 @@ export class NotificationManager {
       type: 'info',
       message,
       duration: options.duration || this._defaultDuration,
-      ...options,
+      ...options
     });
   }
 
@@ -85,7 +85,7 @@ export class NotificationManager {
     const notification = {
       id: this._generateId(),
       visible: false,
-      ...this._parseOptions(options),
+      ...this._parseOptions(options)
     };
 
     // Emit evento
@@ -153,7 +153,7 @@ export class NotificationManager {
       progress: percentage,
       duration: Infinity,
       visible: true,
-      ...options,
+      ...options
     };
 
     this._renderNotification(notification);
@@ -176,9 +176,9 @@ export class NotificationManager {
       duration: 6000,
       action: {
         fn: actionFn,
-        label: actionLabel,
+        label: actionLabel
       },
-      ...options,
+      ...options
     });
 
     return id;
@@ -210,9 +210,15 @@ export class NotificationManager {
    * Processa a fila de notificações
    */
   _processQueue() {
-    if (this._isProcessing) return;
-    if (this._queue.length === 0) return;
-    if (this._notifications.filter((n) => n.visible).length >= this._maxVisible) return;
+    if (this._isProcessing) {
+      return;
+    }
+    if (this._queue.length === 0) {
+      return;
+    }
+    if (this._notifications.filter((n) => n.visible).length >= this._maxVisible) {
+      return;
+    }
 
     this._isProcessing = true;
 
@@ -231,7 +237,9 @@ export class NotificationManager {
    * Renderiza uma notificação no DOM
    */
   _renderNotification(notification) {
-    if (!this._container) return;
+    if (!this._container) {
+      return;
+    }
 
     const element = document.createElement('div');
     element.id = `notification-${notification.id}`;
@@ -281,7 +289,9 @@ export class NotificationManager {
    */
   _removeNotification(index) {
     const notification = this._notifications[index];
-    if (!notification) return;
+    if (!notification) {
+      return;
+    }
 
     const element = document.getElementById(`notification-${notification.id}`);
     if (element) {
@@ -307,7 +317,7 @@ export class NotificationManager {
       error: 'bg-rose-600 border-rose-500 text-white',
       warning: 'bg-amber-500 border-amber-400 text-slate-900',
       info: 'bg-slate-800 border-slate-700 text-white',
-      progress: 'bg-brand-600 border-brand-500 text-white',
+      progress: 'bg-brand-600 border-brand-500 text-white'
     };
 
     return `toast-item flex items-center p-4 rounded-2xl shadow-2xl border w-full sm:w-auto ${classes[type] || classes.info}`;
@@ -364,7 +374,7 @@ export class NotificationManager {
         '<svg class="w-5 h-5 mr-3 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
       info: '<svg class="w-5 h-5 mr-3 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
       progress:
-        '<svg class="w-5 h-5 mr-3 shrink-0 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
+        '<svg class="w-5 h-5 mr-3 shrink-0 animate-spin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>'
     };
 
     return icons[type] || icons.info;
@@ -378,35 +388,35 @@ export class NotificationManager {
     this.registerTemplate('batch-operation', (data) => ({
       type: 'success',
       message: `${data.count} ${data.item}(s) ${data.action}(s) com sucesso!`,
-      duration: 4000,
+      duration: 4000
     }));
 
     // Template para erros de rede
     this.registerTemplate('network-error', (data) => ({
       type: 'error',
       message: `Erro de conexão: ${data.message || 'Verifique sua internet'}`,
-      duration: 6000,
+      duration: 6000
     }));
 
     // Template para backup
     this.registerTemplate('backup-complete', (data) => ({
       type: 'success',
       message: `Backup concluído! ${data.total || 0} registros exportados.`,
-      duration: 5000,
+      duration: 5000
     }));
 
     // Template para sessão
     this.registerTemplate('session-expired', () => ({
       type: 'warning',
       message: 'Sessão expirada. Redirecionando para login...',
-      duration: 3000,
+      duration: 3000
     }));
 
     // Template para sincronização
     this.registerTemplate('sync-complete', (data) => ({
       type: 'info',
       message: `Dados sincronizados! ${data.count || 0} registros atualizados.`,
-      duration: 3000,
+      duration: 3000
     }));
   }
 
@@ -415,7 +425,9 @@ export class NotificationManager {
    */
   _playSound(type) {
     try {
-      if (!window.AudioContext && !window.webkitAudioContext) return;
+      if (!window.AudioContext && !window.webkitAudioContext) {
+        return;
+      }
 
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const oscillator = ctx.createOscillator();
@@ -428,7 +440,7 @@ export class NotificationManager {
         success: { frequency: 880, duration: 0.1, type: 'sine' },
         error: { frequency: 220, duration: 0.3, type: 'sawtooth' },
         warning: { frequency: 440, duration: 0.2, type: 'square' },
-        info: { frequency: 660, duration: 0.15, type: 'sine' },
+        info: { frequency: 660, duration: 0.15, type: 'sine' }
       };
 
       const sound = sounds[type] || sounds.info;
@@ -451,7 +463,7 @@ export class NotificationManager {
     return {
       duration: this._defaultDuration,
       priority: 'normal',
-      ...options,
+      ...options
     };
   }
 

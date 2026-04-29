@@ -4,7 +4,7 @@ import {
   updateDoc,
   deleteDoc,
   addDoc,
-  collection,
+  collection
 } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 import { db, auth, DB_BASE_PATH, COLLECTIONS } from '../app.js';
 
@@ -48,19 +48,29 @@ export const AppCRUDUsers = {
   },
 
   bulkAction: async function (action) {
-    if (this.selectedUsers.size === 0) return;
+    if (this.selectedUsers.size === 0) {
+      return;
+    }
 
     const users = window.App.Data.users.filter((u) => this.selectedUsers.has(u.firebaseId));
     if (action === 'delete') {
-      if (!confirm(`Tem certeza que deseja excluir ${users.length} usuário(s)?`)) return;
+      if (!confirm(`Tem certeza que deseja excluir ${users.length} usuário(s)?`)) {
+        return;
+      }
     }
 
     try {
       const promises = users.map((u) => {
         const ref = doc(db, DB_BASE_PATH, COLLECTIONS.USERS, u.firebaseId);
-        if (action === 'activate') return updateDoc(ref, { status: 'Ativo' });
-        if (action === 'deactivate') return updateDoc(ref, { status: 'Inativo' });
-        if (action === 'delete') return deleteDoc(ref);
+        if (action === 'activate') {
+          return updateDoc(ref, { status: 'Ativo' });
+        }
+        if (action === 'deactivate') {
+          return updateDoc(ref, { status: 'Inativo' });
+        }
+        if (action === 'delete') {
+          return deleteDoc(ref);
+        }
       });
       await Promise.all(promises);
       window.App.UI.showToast(`Ação concluída para ${users.length} usuário(s).`, 'success');
@@ -72,17 +82,22 @@ export const AppCRUDUsers = {
   },
 
   getAccessLevel: function (u) {
-    if (u.email && String(u.email).toLowerCase() === 'jefferson.araujo@camara.leg.br')
+    if (u.email && String(u.email).toLowerCase() === 'jefferson.araujo@camara.leg.br') {
       return 'Administrador';
+    }
     return u.accessLevel || (u.role === 'Administrador' ? 'Administrador' : 'Usuário Padrão');
   },
   getStatus: function (u) {
     return u.status || 'Ativo';
   },
   getInitials: function (name) {
-    if (!name) return '??';
+    if (!name) {
+      return '??';
+    }
     const parts = name.trim().split(/\s+/);
-    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    if (parts.length === 1) {
+      return parts[0].substring(0, 2).toUpperCase();
+    }
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   },
   getFilteredUsers: function () {
@@ -167,14 +182,16 @@ export const AppCRUDUsers = {
           return order * String(a.name || '').localeCompare(String(b.name || ''));
         case 'email':
           return order * String(a.email || '').localeCompare(String(b.email || ''));
-        case 'lastLogin':
+        case 'lastLogin': {
           const loginA = a.lastLogin ? new Date(a.lastLogin).getTime() : 0;
           const loginB = b.lastLogin ? new Date(b.lastLogin).getTime() : 0;
           return order * (loginB - loginA);
-        case 'status':
+        }
+        case 'status': {
           const statusA = this.getStatus(a);
           const statusB = this.getStatus(b);
           return order * String(statusA).localeCompare(String(statusB));
+        }
         default:
           return 0;
       }
@@ -189,7 +206,7 @@ export const AppCRUDUsers = {
     return {
       users: users.slice(start, end),
       totalPages: totalPages,
-      totalItems: users.length,
+      totalItems: users.length
     };
   },
   setPage: function (page) {
@@ -197,20 +214,27 @@ export const AppCRUDUsers = {
     this.render();
   },
   formatLastLogin: function (value) {
-    if (!value) return 'Sem registro';
+    if (!value) {
+      return 'Sem registro';
+    }
     let d = value;
-    if (typeof value?.toDate === 'function') d = value.toDate();
-    else if (typeof value === 'object' && value !== null && typeof value.seconds === 'number')
+    if (typeof value?.toDate === 'function') {
+      d = value.toDate();
+    } else if (typeof value === 'object' && value !== null && typeof value.seconds === 'number') {
       d = new Date(value.seconds * 1000);
-    else d = new Date(value);
-    if (!(d instanceof Date) || Number.isNaN(d.getTime())) return 'Sem registro';
+    } else {
+      d = new Date(value);
+    }
+    if (!(d instanceof Date) || Number.isNaN(d.getTime())) {
+      return 'Sem registro';
+    }
     return d.toLocaleString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit',
+      second: '2-digit'
     });
   },
   isProtectedUser: function (u) {
@@ -234,10 +258,18 @@ export const AppCRUDUsers = {
     const adminsEl = document.getElementById('count-admins');
     const usersEl = document.getElementById('count-users');
 
-    if (totalEl) totalEl.textContent = total;
-    if (activeEl) activeEl.textContent = active;
-    if (adminsEl) adminsEl.textContent = admins;
-    if (usersEl) usersEl.textContent = regularUsers;
+    if (totalEl) {
+      totalEl.textContent = total;
+    }
+    if (activeEl) {
+      activeEl.textContent = active;
+    }
+    if (adminsEl) {
+      adminsEl.textContent = admins;
+    }
+    if (usersEl) {
+      usersEl.textContent = regularUsers;
+    }
   },
   setAccessFilter: function (filter) {
     this.currentAccessFilter = filter;
@@ -267,7 +299,9 @@ export const AppCRUDUsers = {
   render: function () {
     const list =
       window.App.UI.domCache?.usersList || document.getElementById('user-management-body');
-    if (!list) return;
+    if (!list) {
+      return;
+    }
     if (!window.App.Data.usersLoaded) {
       list.innerHTML = Array(6).fill(window.Utils.getSkeletonHTML()).join('');
       return;
@@ -312,21 +346,21 @@ export const AppCRUDUsers = {
           ? `
           <div class="space-y-1 mt-1">
             ${
-              u.lastIp
-                ? `<div class="flex items-center gap-1 text-[9px] text-slate-400" title="Endereço IP do dispositivo">
+  u.lastIp
+    ? `<div class="flex items-center gap-1 text-[9px] text-slate-400" title="Endereço IP do dispositivo">
               <svg class="w-3 h-3 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 18H2"/><path d="M18 18h4"/><path d="M6 14v4"/><path d="M18 14v4"/></svg>
               <span class="truncate">${window.Utils.escapeHTML(u.lastIp)}</span>
             </div>`
-                : ''
-            }
+    : ''
+}
             ${
-              u.lastDevice
-                ? `<div class="flex items-center gap-1 text-[9px] text-slate-400" title="Dispositivo utilizado no login">
+  u.lastDevice
+    ? `<div class="flex items-center gap-1 text-[9px] text-slate-400" title="Dispositivo utilizado no login">
               <svg class="w-3 h-3 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></svg>
               <span class="truncate">${window.Utils.escapeHTML(u.lastDevice)}</span>
             </div>`
-                : ''
-            }
+    : ''
+}
           </div>
         `
           : '';
@@ -382,7 +416,7 @@ export const AppCRUDUsers = {
   },
   getPaginationHTML: function (totalPages) {
     const currentPage = this.currentPage;
-    let pages = [];
+    const pages = [];
     const startPage = Math.max(1, currentPage - 2);
     const endPage = Math.min(totalPages, startPage + 4);
 
@@ -397,14 +431,14 @@ export const AppCRUDUsers = {
         </button>
         ${startPage > 1 ? `<button onclick="App.CRUDUsers.setPage(1)" class="px-3 py-2 rounded-xl text-xs font-semibold border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-300">1</button>${pages[0] > 2 ? '<span class="text-slate-400 px-2">...</span>' : ''}` : ''}
         ${pages
-          .map(
-            (p) => `
+    .map(
+      (p) => `
           <button onclick="App.CRUDUsers.setPage(${p})" class="px-3 py-2 rounded-xl text-xs font-semibold transition-all border ${p === currentPage ? 'bg-brand-600 text-white border-brand-600' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-300'}">
             ${p}
           </button>
         `
-          )
-          .join('')}
+    )
+    .join('')}
         ${endPage < totalPages ? `${pages[pages.length - 1] < totalPages - 1 ? '<span class="text-slate-400 px-2">...</span>' : ''}<button onclick="App.CRUDUsers.setPage(${totalPages})" class="px-3 py-2 rounded-xl text-xs font-semibold border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-300">${totalPages}</button>` : ''}
         <button onclick="App.CRUDUsers.setPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''} class="px-3 py-2 rounded-xl text-xs font-semibold transition-all border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-slate-200">
           Próximo →
@@ -415,16 +449,19 @@ export const AppCRUDUsers = {
   openModal: function (id = null) {
     const m = document.getElementById('crud-user-modal');
     if (m) {
-      m.classList.remove('hidden');
-      m.classList.add('flex');
+      m.showModal();
     }
     const subtitle = document.getElementById('user-modal-subtitle');
     const saveText = document.getElementById('btn-save-user-text');
     if (id) {
       const u = window.App.Data.users.find((x) => x.firebaseId === id);
       document.getElementById('user-modal-title').textContent = 'Editar Usuário';
-      if (subtitle) subtitle.textContent = 'Atualize os dados cadastrais e o nivel de acesso.';
-      if (saveText) saveText.textContent = 'Salvar';
+      if (subtitle) {
+        subtitle.textContent = 'Atualize os dados cadastrais e o nivel de acesso.';
+      }
+      if (saveText) {
+        saveText.textContent = 'Salvar';
+      }
       document.getElementById('crud-user-id').value = u.firebaseId;
       document.getElementById('crud-user-name').value = u.name;
       document.getElementById('crud-user-email').value = u.email || '';
@@ -432,8 +469,12 @@ export const AppCRUDUsers = {
       document.getElementById('crud-user-access').value = u.accessLevel || 'Usuário Padrão';
     } else {
       document.getElementById('user-modal-title').textContent = 'Novo Usuário';
-      if (subtitle) subtitle.textContent = 'Cadastre um novo colaborador no sistema';
-      if (saveText) saveText.textContent = 'Cadastrar';
+      if (subtitle) {
+        subtitle.textContent = 'Cadastre um novo colaborador no sistema';
+      }
+      if (saveText) {
+        saveText.textContent = 'Cadastrar';
+      }
       document.getElementById('crud-user-id').value = '';
       document.getElementById('crud-user-name').value = '';
       document.getElementById('crud-user-email').value = '';
@@ -444,8 +485,7 @@ export const AppCRUDUsers = {
   closeModal: () => {
     const m = document.getElementById('crud-user-modal');
     if (m) {
-      m.classList.add('hidden');
-      m.classList.remove('flex');
+      m.close();
     }
   },
   saveUser: async function () {
@@ -454,8 +494,9 @@ export const AppCRUDUsers = {
       e = document.getElementById('crud-user-email').value.trim().toLowerCase(),
       d = document.getElementById('crud-user-department').value.trim(),
       a = document.getElementById('crud-user-access').value;
-    if (!n || !e)
+    if (!n || !e) {
       return window.App.UI.showToast('Os campos Nome e E-mail são obrigatórios.', 'warning');
+    }
     if (
       window.App.Data.users.some(
         (u) =>
@@ -463,17 +504,18 @@ export const AppCRUDUsers = {
           u.email &&
           String(u.email).toLowerCase() === String(e).toLowerCase()
       )
-    )
+    ) {
       return window.App.UI.showToast('E-mail já cadastrado.', 'warning');
+    }
     try {
-      if (id)
+      if (id) {
         await updateDoc(doc(db, DB_BASE_PATH, COLLECTIONS.USERS, id), {
           name: n,
           email: e,
           accessLevel: a,
-          department: d,
+          department: d
         });
-      else
+      } else {
         await setDoc(doc(db, DB_BASE_PATH, COLLECTIONS.USERS, e), {
           name: n,
           email: e,
@@ -481,8 +523,9 @@ export const AppCRUDUsers = {
           department: d,
           status: 'Ativo',
           createdAt: new Date().toISOString(),
-          lastLogin: null,
+          lastLogin: null
         });
+      }
       window.App.UI.showToast('Salvo com sucesso.', 'success');
       this.closeModal();
     } catch (e) {
@@ -491,13 +534,15 @@ export const AppCRUDUsers = {
   },
   toggleRole: async function (id) {
     const u = window.App.Data.users.find((x) => x.firebaseId === id);
-    if (!u) return;
+    if (!u) {
+      return;
+    }
     const currentAccess =
       u.accessLevel || (u.role === 'Administrador' ? 'Administrador' : 'Usuário Padrão');
     const newAccess = currentAccess === 'Administrador' ? 'Usuário Padrão' : 'Administrador';
     try {
       await updateDoc(doc(db, DB_BASE_PATH, COLLECTIONS.USERS, id), {
-        accessLevel: newAccess,
+        accessLevel: newAccess
       });
       window.App.UI.showToast(`Nível de acesso alterado para ${newAccess}.`, 'success');
     } catch (e) {
@@ -506,7 +551,9 @@ export const AppCRUDUsers = {
   },
   toggleStatus: async function (id) {
     const u = window.App.Data.users.find((x) => x.firebaseId === id);
-    if (!u) return;
+    if (!u) {
+      return;
+    }
     const newStatus = u.status === 'Inativo' ? 'Ativo' : 'Inativo';
     const actionText = newStatus === 'Ativo' ? 'ativar' : 'desativar';
 
@@ -518,7 +565,7 @@ export const AppCRUDUsers = {
 
     try {
       await updateDoc(doc(db, DB_BASE_PATH, COLLECTIONS.USERS, id), {
-        status: newStatus,
+        status: newStatus
       });
 
       if (btn) {
@@ -552,31 +599,37 @@ export const AppCRUDUsers = {
     }
   },
   importFile: async function (e) {
-    if (!e || !e.target || !e.target.files) return;
+    if (!e || !e.target || !e.target.files) {
+      return;
+    }
     if (!window.XLSX) {
       window.App.UI.showToast('Carregando motor de Excel...', 'info');
       try {
         await window.Utils.loadScript(
           'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
         );
-      } catch (err) {
+      } catch {
         window.App.UI.showToast('Erro ao carregar o motor.', 'error');
         e.target.value = '';
         return;
       }
     }
     const f = e.target.files[0];
-    if (!f) return;
+    if (!f) {
+      return;
+    }
     const r = new FileReader();
     r.onload = async (ev) => {
       try {
         const wb = window.XLSX.read(new Uint8Array(ev.target.result), {
-          type: 'array',
+          type: 'array'
         });
         const rows = window.XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
-          header: 1,
+          header: 1
         });
-        if (rows.length < 2) return window.App.UI.showToast('Arquivo vazio ou inválido.', 'error');
+        if (rows.length < 2) {
+          return window.App.UI.showToast('Arquivo vazio ou inválido.', 'error');
+        }
         window.App.UI.showToast('Importando lista... Aguarde.', 'info');
         let c = 0,
           dup = 0;
@@ -586,10 +639,13 @@ export const AppCRUDUsers = {
           );
         for (let i = 1; i < rows.length; i++) {
           const cols = rows[i];
-          if (!cols || cols.length === 0) continue;
-          const n = cols[0] != null ? String(cols[0]).trim() : '',
-            em = cols[1] != null ? String(cols[1]).trim() : '',
-            acc = cols[2] != null ? String(cols[2]).trim() : 'Usuário Padrão';
+          if (!cols || cols.length === 0) {
+            continue;
+          }
+          const n = cols[0] !== null && cols[0] !== undefined ? String(cols[0]).trim() : '',
+            em = cols[1] !== null && cols[1] !== undefined ? String(cols[1]).trim() : '',
+            acc =
+              cols[2] !== null && cols[2] !== undefined ? String(cols[2]).trim() : 'Usuário Padrão';
           if (n) {
             const lN = n.toLowerCase();
             if (eN.has(lN) || (em && eE.has(em.toLowerCase()))) {
@@ -597,13 +653,15 @@ export const AppCRUDUsers = {
               continue;
             }
             eN.add(lN);
-            if (em) eE.add(em.toLowerCase());
+            if (em) {
+              eE.add(em.toLowerCase());
+            }
             try {
               await addDoc(collection(db, DB_BASE_PATH, COLLECTIONS.USERS), {
                 name: n,
                 email: em,
                 accessLevel: acc,
-                status: 'Ativo',
+                status: 'Ativo'
               });
               c++;
             } catch (err) {
@@ -615,7 +673,7 @@ export const AppCRUDUsers = {
           `${c} registros importados. ${dup > 0 ? `(${dup} ignorados)` : ''}`,
           'success'
         );
-      } catch (err) {
+      } catch {
         window.App.UI.showToast('Falha ao ler Excel.', 'error');
       } finally {
         e.target.value = '';
@@ -644,14 +702,14 @@ export const AppCRUDUsers = {
         </h3>
         <p class="text-slate-500 dark:text-slate-400 max-w-md mb-6">
           ${
-            hasFilters
-              ? 'Tente ajustar os filtros ou termos de busca para encontrar o que procura.'
-              : 'Comece cadastrando o primeiro usuário do sistema.'
-          }
+  hasFilters
+    ? 'Tente ajustar os filtros ou termos de busca para encontrar o que procura.'
+    : 'Comece cadastrando o primeiro usuário do sistema.'
+}
         </p>
         ${
-          !hasFilters
-            ? `
+  !hasFilters
+    ? `
           <button onclick="App.CRUDUsers.openModal()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-600/30 transition-all active:scale-95 flex items-center gap-2">
             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M5 12h14"/><path d="M12 5v14"/>
@@ -659,12 +717,12 @@ export const AppCRUDUsers = {
             Cadastrar Primeiro Usuário
           </button>
         `
-            : `
+    : `
           <button onclick="App.CRUDUsers.setAccessFilter('all'); document.getElementById('users-search').value = ''; App.CRUDUsers.applyFilters();" class="px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-xl transition-all">
             Limpar Filtros
           </button>
         `
-        }
+}
       </div>
     `;
   },
@@ -675,23 +733,24 @@ export const AppCRUDUsers = {
         await window.Utils.loadScript(
           'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
         );
-      } catch (err) {
+      } catch {
         return window.App.UI.showToast('Erro ao carregar o motor.', 'error');
       }
     }
-    if (!window.App.Data.users || window.App.Data.users.length === 0)
+    if (!window.App.Data.users || window.App.Data.users.length === 0) {
       return window.App.UI.showToast('Nenhum colaborador para exportar.', 'warning');
+    }
     const data = window.App.Data.users.map((u) => ({
       'Nome Completo': u.name || '',
       'E-mail': u.email || '',
       'Nivel de Acesso': u.accessLevel || 'Usuário Padrão',
       Status: u.status || 'Ativo',
       Departamento: u.department || '-',
-      'Criado em': u.createdAt ? new Date(u.createdAt).toLocaleString('pt-BR') : '-',
+      'Criado em': u.createdAt ? new Date(u.createdAt).toLocaleString('pt-BR') : '-'
     }));
     const ws = window.XLSX.utils.json_to_sheet(data);
     const wb = window.XLSX.utils.book_new();
     window.XLSX.utils.book_append_sheet(wb, ws, 'Colaboradores');
     window.XLSX.writeFile(wb, `colaboradores_coeng_${new Date().toISOString().slice(0, 10)}.xlsx`);
-  },
+  }
 };

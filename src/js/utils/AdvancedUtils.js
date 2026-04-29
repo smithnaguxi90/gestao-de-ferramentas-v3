@@ -55,7 +55,9 @@ export function debounce(func, wait = CONFIG.DEBOUNCE_DELAY, options = {}) {
   }
 
   debounced.cancel = function () {
-    if (timeout) clearTimeout(timeout);
+    if (timeout) {
+      clearTimeout(timeout);
+    }
     timeout = lastArgs = lastThis = undefined;
     lastCallTime = 0;
   };
@@ -244,12 +246,24 @@ export function memoize(fn, options = {}) {
  * Deep clone de objetos
  */
 export function deepClone(obj, hash = new WeakMap()) {
-  if (obj === null || typeof obj !== 'object') return obj;
-  if (obj instanceof Date) return new Date(obj.getTime());
-  if (obj instanceof RegExp) return new RegExp(obj.source, obj.flags);
-  if (obj instanceof Map) return new Map(obj);
-  if (obj instanceof Set) return new Set(obj);
-  if (hash.has(obj)) return hash.get(obj);
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+  if (obj instanceof Date) {
+    return new Date(obj.getTime());
+  }
+  if (obj instanceof RegExp) {
+    return new RegExp(obj.source, obj.flags);
+  }
+  if (obj instanceof Map) {
+    return new Map(obj);
+  }
+  if (obj instanceof Set) {
+    return new Set(obj);
+  }
+  if (hash.has(obj)) {
+    return hash.get(obj);
+  }
 
   const clone = Array.isArray(obj) ? [] : {};
   hash.set(obj, clone);
@@ -318,7 +332,9 @@ export function set(object, path, value) {
  * Formata bytes para string legível
  */
 export function formatBytes(bytes, decimals = 2) {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) {
+    return '0 Bytes';
+  }
 
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -341,7 +357,7 @@ export function formatRelativeDate(date) {
     { label: 'semana', seconds: 604800 },
     { label: 'dia', seconds: 86400 },
     { label: 'hora', seconds: 3600 },
-    { label: 'minuto', seconds: 60 },
+    { label: 'minuto', seconds: 60 }
   ];
 
   for (const interval of intervals) {
@@ -386,7 +402,7 @@ export function escapeHTML(str) {
         '<': '&lt;',
         '>': '&gt;',
         "'": '&#39;',
-        '"': '&quot;',
+        '"': '&quot;'
       })[match]
   );
 }
@@ -408,7 +424,7 @@ export function normalizeCode(code) {
 export function formatCurrency(value, locale = 'pt-BR', currency = 'BRL') {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency,
+    currency
   }).format(value);
 }
 
@@ -418,7 +434,7 @@ export function formatCurrency(value, locale = 'pt-BR', currency = 'BRL') {
 export function formatNumber(value, decimals = 2) {
   return new Intl.NumberFormat('pt-BR', {
     minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
+    maximumFractionDigits: decimals
   }).format(value);
 }
 
@@ -426,7 +442,9 @@ export function formatNumber(value, decimals = 2) {
  * Formata porcentagem
  */
 export function formatPercentage(value, total, decimals = 0) {
-  if (total === 0) return '0%';
+  if (total === 0) {
+    return '0%';
+  }
   return `${((value / total) * 100).toFixed(decimals)}%`;
 }
 
@@ -434,7 +452,9 @@ export function formatPercentage(value, total, decimals = 0) {
  * Trunca string
  */
 export function truncate(str, maxLength, suffix = '...') {
-  if (!str || str.length <= maxLength) return str;
+  if (!str || str.length <= maxLength) {
+    return str;
+  }
   return str.slice(0, maxLength - suffix.length) + suffix;
 }
 
@@ -451,10 +471,14 @@ export function titleCase(str) {
  * Gera iniciais de um nome
  */
 export function getInitials(name, maxChars = 2) {
-  if (!name) return '';
+  if (!name) {
+    return '';
+  }
 
   const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].substring(0, maxChars).toUpperCase();
+  if (parts.length === 1) {
+    return parts[0].substring(0, maxChars).toUpperCase();
+  }
 
   return parts
     .slice(0, maxChars)
@@ -506,7 +530,9 @@ export function uniqBy(array, key) {
   const seen = new Set();
   return array.filter((item) => {
     const value = typeof key === 'function' ? key(item) : item[key];
-    if (seen.has(value)) return false;
+    if (seen.has(value)) {
+      return false;
+    }
     seen.add(value);
     return true;
   });
@@ -529,7 +555,9 @@ export function chunk(array, size = 1) {
 const scriptCache = new Set();
 
 export async function loadScript(src) {
-  if (scriptCache.has(src)) return;
+  if (scriptCache.has(src)) {
+    return;
+  }
   if (document.querySelector(`script[src="${src}"]`)) {
     scriptCache.add(src);
     return;
@@ -562,7 +590,7 @@ export function observeIntersection(element, callback, options = {}) {
     {
       threshold: 0.1,
       rootMargin: '0px',
-      ...options,
+      ...options
     }
   );
 
@@ -643,9 +671,15 @@ export class VirtualList {
  */
 export function getErrorMessage(err) {
   const code = String(err?.code || '').toLowerCase();
-  if (code.includes('permission-denied')) return 'O Firestore recusou a operação por permissão.';
-  if (code.includes('unauthenticated')) return 'Sua sessão expirou. Faça login novamente.';
-  if (code.includes('unavailable')) return 'O banco de dados está indisponível no momento.';
+  if (code.includes('permission-denied')) {
+    return 'O Firestore recusou a operação por permissão.';
+  }
+  if (code.includes('unauthenticated')) {
+    return 'Sua sessão expirou. Faça login novamente.';
+  }
+  if (code.includes('unavailable')) {
+    return 'O banco de dados está indisponível no momento.';
+  }
   const message = String(err?.message || '').trim();
   return message.length > 140 ? `${message.slice(0, 137)}...` : message;
 }
@@ -657,12 +691,12 @@ export function formatDate(iso) {
   return !iso
     ? 'Sem registro'
     : new Date(iso).toLocaleString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 }
 
 /**
@@ -710,20 +744,20 @@ export function getBadgeHTML(s) {
     maintenance:
       'text-rose-700 bg-rose-50 border-rose-200 dark:bg-rose-900/30 dark:border-rose-800/50 dark:text-rose-400',
     in: 'text-emerald-700 bg-emerald-50 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400',
-    out: 'text-blue-700 bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400',
+    out: 'text-blue-700 bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400'
   };
   const txt = {
     available: 'Disponível',
     borrowed: 'Emprestada',
     maintenance: 'Manutenção',
     in: 'Devolução',
-    out: 'Retirada',
+    out: 'Retirada'
   };
   return `<span class="inline-flex items-center gap-1 px-2.5 py-1 border rounded-lg text-[10px] font-extrabold tracking-widest uppercase shadow-sm ${b[s] || 'bg-slate-50 text-slate-600 dark:bg-slate-800 dark:text-slate-300'}">${txt[s] || s}</span>`;
 }
 
 export function getSkeletonHTML() {
-  return `<div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 animate-pulse flex flex-col gap-4"><div class="flex gap-4"><div class="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-xl"></div><div class="flex-1"><div class="h-4 bg-slate-200 dark:bg-slate-700 w-3/4 rounded mb-2"></div><div class="h-3 bg-slate-200 dark:bg-slate-700 w-1/2 rounded"></div></div></div><div class="border-t border-slate-100 dark:border-slate-800"></div><div class="h-3 bg-slate-200 dark:bg-slate-700 w-full rounded"></div></div>`;
+  return '<div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 animate-pulse flex flex-col gap-4"><div class="flex gap-4"><div class="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-xl"></div><div class="flex-1"><div class="h-4 bg-slate-200 dark:bg-slate-700 w-3/4 rounded mb-2"></div><div class="h-3 bg-slate-200 dark:bg-slate-700 w-1/2 rounded"></div></div></div><div class="border-t border-slate-100 dark:border-slate-800"></div><div class="h-3 bg-slate-200 dark:bg-slate-700 w-full rounded"></div></div>';
 }
 
 export function getEmptyStateHTML(msg) {
@@ -734,19 +768,24 @@ export const Logger = {
   error: (msg, err) => {
     const detail = getErrorMessage(err);
     console.error(`[ERRO] ${msg}`, err || '');
-    if (window.App && window.App.UI)
+    if (window.App && window.App.UI) {
       window.App.UI.showToast(detail ? `${msg} ${detail}` : msg, 'error');
+    }
   },
   warn: (msg, data) => console.warn(`[AVISO] ${msg}`, data || ''),
-  info: (msg, data) => console.info(`[INFO] ${msg}`, data || ''),
+  info: (msg, data) => console.info(`[INFO] ${msg}`, data || '')
 };
 
 export const AudioSys = {
   ctx: null,
   playBeep: function (type = 'success') {
     try {
-      if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-      if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => {});
+      if (!this.ctx) {
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (this.ctx.state === 'suspended') {
+        this.ctx.resume().catch(() => {});
+      }
       const o = this.ctx.createOscillator(),
         g = this.ctx.createGain();
       o.connect(g);
@@ -769,5 +808,5 @@ export const AudioSys = {
     } catch (e) {
       Logger.warn('Erro ao reproduzir som:', e?.message);
     }
-  },
+  }
 };

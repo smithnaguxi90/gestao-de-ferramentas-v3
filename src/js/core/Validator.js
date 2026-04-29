@@ -17,7 +17,7 @@ export class ValidationError extends Error {
       field: this.field,
       message: this.message,
       value: this.value,
-      timestamp: this.timestamp,
+      timestamp: this.timestamp
     };
   }
 }
@@ -82,14 +82,14 @@ export class Validator {
       return {
         valid: false,
         errors,
-        data: sanitized,
+        data: sanitized
       };
     }
 
     return {
       valid: true,
       errors: [],
-      data: sanitized,
+      data: sanitized
     };
   }
 
@@ -110,10 +110,10 @@ export class Validator {
       sanitize,
       defaultValue,
       oneOf,
-      dependsOn,
+      dependsOn
     } = rules;
 
-    let result = { sanitized: value };
+    const result = { sanitized: value };
 
     // Verifica dependências
     if (dependsOn) {
@@ -247,52 +247,52 @@ export class Validator {
         type: 'string',
         minLength: 3,
         maxLength: 100,
-        sanitize: (v) => v.trim(),
+        sanitize: (v) => v.trim()
       },
       email: {
         required: true,
         type: 'string',
         pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        sanitize: (v) => v.toLowerCase().trim(),
+        sanitize: (v) => v.toLowerCase().trim()
       },
       password: {
         type: 'string',
         minLength: 8,
-        maxLength: 128,
+        maxLength: 128
       },
       accessLevel: {
         type: 'string',
         oneOf: ['Administrador', 'Operador', 'Visualizador'],
-        defaultValue: 'Operador',
+        defaultValue: 'Operador'
       },
       badge: {
         type: 'string',
         maxLength: 50,
-        sanitize: (v) => v?.toUpperCase().trim(),
+        sanitize: (v) => v?.toUpperCase().trim()
       },
       role: {
         type: 'string',
         maxLength: 100,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       department: {
         type: 'string',
         maxLength: 100,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       phone: {
         type: 'string',
         pattern: /^\+?[\d\s\-()]+$/,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       active: {
         type: 'boolean',
-        defaultValue: true,
+        defaultValue: true
       },
       avatar: {
         type: 'string',
-        maxLength: 2048,
-      },
+        maxLength: 2048
+      }
     });
 
     // Schema de ferramenta
@@ -302,68 +302,68 @@ export class Validator {
         type: 'string',
         minLength: 1,
         maxLength: 50,
-        sanitize: (v) => v.toUpperCase().trim(),
+        sanitize: (v) => v.toUpperCase().trim()
       },
       name: {
         required: true,
         type: 'string',
         minLength: 2,
         maxLength: 200,
-        sanitize: (v) => v.trim(),
+        sanitize: (v) => v.trim()
       },
       category: {
         required: true,
         type: 'string',
         maxLength: 100,
-        sanitize: (v) => v.trim(),
+        sanitize: (v) => v.trim()
       },
       status: {
         type: 'string',
         oneOf: ['available', 'borrowed', 'maintenance'],
-        defaultValue: 'available',
+        defaultValue: 'available'
       },
       description: {
         type: 'string',
         maxLength: 1000,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       brand: {
         type: 'string',
         maxLength: 100,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       model: {
         type: 'string',
         maxLength: 100,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       serialNumber: {
         type: 'string',
         maxLength: 100,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       purchaseDate: {
         type: 'string',
-        pattern: /^\d{4}-\d{2}-\d{2}$/,
+        pattern: /^\d{4}-\d{2}-\d{2}$/
       },
       price: {
         type: 'number',
-        min: 0,
+        min: 0
       },
       currentUser: {
         type: 'string',
         maxLength: 100,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       imageUrl: {
         type: 'string',
-        maxLength: 2048,
+        maxLength: 2048
       },
       notes: {
         type: 'string',
         maxLength: 500,
-        sanitize: (v) => v?.trim(),
-      },
+        sanitize: (v) => v?.trim()
+      }
     });
 
     // Schema de colaborador
@@ -373,38 +373,38 @@ export class Validator {
         type: 'string',
         minLength: 3,
         maxLength: 200,
-        sanitize: (v) => v.trim(),
+        sanitize: (v) => v.trim()
       },
       badge: {
         required: true,
         type: 'string',
         maxLength: 50,
-        sanitize: (v) => v.toUpperCase().trim(),
+        sanitize: (v) => v.toUpperCase().trim()
       },
       role: {
         type: 'string',
         maxLength: 100,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       department: {
         type: 'string',
         maxLength: 100,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       phone: {
         type: 'string',
         pattern: /^\+?[\d\s\-()]+$/,
-        sanitize: (v) => v?.trim(),
+        sanitize: (v) => v?.trim()
       },
       email: {
         type: 'string',
         pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        sanitize: (v) => v.toLowerCase().trim(),
+        sanitize: (v) => v.toLowerCase().trim()
       },
       active: {
         type: 'boolean',
-        defaultValue: true,
-      },
+        defaultValue: true
+      }
     });
 
     // Schema de histórico
@@ -412,36 +412,36 @@ export class Validator {
       toolCode: {
         required: true,
         type: 'string',
-        maxLength: 50,
+        maxLength: 50
       },
       toolName: {
         required: true,
         type: 'string',
-        maxLength: 200,
+        maxLength: 200
       },
       type: {
         required: true,
         type: 'string',
-        oneOf: ['in', 'out', 'maintenance', 'return'],
+        oneOf: ['in', 'out', 'maintenance', 'return']
       },
       user: {
         required: true,
         type: 'string',
-        maxLength: 100,
+        maxLength: 100
       },
       ip: {
         type: 'string',
-        maxLength: 50,
+        maxLength: 50
       },
       device: {
         type: 'string',
-        maxLength: 200,
+        maxLength: 200
       },
       notes: {
         type: 'string',
         maxLength: 500,
-        sanitize: (v) => v?.trim(),
-      },
+        sanitize: (v) => v?.trim()
+      }
     });
 
     return this;

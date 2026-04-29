@@ -37,5 +37,5 @@ export const AppSession = {
         alert('Sessão expirada. Faça login novamente.');
       }
     }, CONFIG.SESSION_LIMIT_MS);
-  },
+  }
 };

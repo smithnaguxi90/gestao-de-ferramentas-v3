@@ -8,11 +8,15 @@ export const AppUI = {
   setMobileSidebarState: function (isOpen) {
     const sidebar = document.getElementById('main-sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-    if (!sidebar) return;
+    if (!sidebar) {
+      return;
+    }
 
     sidebar.classList.toggle('-translate-x-full', !isOpen);
     sidebar.classList.toggle('translate-x-0', isOpen);
-    if (overlay) overlay.classList.toggle('hidden', !isOpen);
+    if (overlay) {
+      overlay.classList.toggle('hidden', !isOpen);
+    }
 
     // Guardar estado em sessionStorage para persistência
     sessionStorage.setItem('sidebar-state', isOpen ? 'open' : 'closed');
@@ -25,20 +29,26 @@ export const AppUI = {
 
   closeUserMenu: function () {
     const userMenu = document.getElementById('user-dropdown-menu');
-    if (!userMenu) return;
+    if (!userMenu) {
+      return;
+    }
     userMenu.classList.add('opacity-0', 'invisible');
   },
 
   syncResponsiveLayout: function () {
     const sidebar = document.getElementById('main-sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-    if (!sidebar) return;
+    if (!sidebar) {
+      return;
+    }
 
     // Se for Desktop (>= 1024px)
     if (window.innerWidth >= 1024) {
       sidebar.classList.remove('-translate-x-full');
       sidebar.classList.add('translate-x-0');
-      if (overlay) overlay.classList.add('hidden');
+      if (overlay) {
+        overlay.classList.add('hidden');
+      }
       return;
     }
 
@@ -49,7 +59,9 @@ export const AppUI = {
   },
   toggleSidebar: function () {
     const sidebar = document.getElementById('main-sidebar');
-    if (!sidebar) return;
+    if (!sidebar) {
+      return;
+    }
 
     // Fechar o menu do usuário sempre que o sidebar for alterado
     this.closeUserMenu();
@@ -99,17 +111,21 @@ export const AppUI = {
         window.Chart.defaults.plugins.tooltip.borderColor = isDark ? '#334155' : '#e2e8f0';
         window.Chart.defaults.plugins.tooltip.borderWidth = 1;
       }
-      for (let id in window.Chart.instances) {
+      for (const id in window.Chart.instances) {
         window.Chart.instances[id].update();
       }
     }
   },
   copyToClipboard: function (elementId) {
     const el = document.getElementById(elementId);
-    if (!el) return;
+    if (!el) {
+      return;
+    }
 
     const text = el.textContent;
-    if (!text || text === 'Sem e-mail' || text === 'Desconhecido') return;
+    if (!text || text === 'Sem e-mail' || text === 'Desconhecido') {
+      return;
+    }
 
     navigator.clipboard
       .writeText(text)
@@ -128,7 +144,9 @@ export const AppUI = {
       });
   },
   toggleUserMenu: function (e) {
-    if (e) e.stopPropagation();
+    if (e) {
+      e.stopPropagation();
+    }
     const menu = document.getElementById('user-dropdown-menu');
     if (menu) {
       menu.classList.toggle('opacity-0');
@@ -143,7 +161,9 @@ export const AppUI = {
   updateNetworkStatus: function (isOnline) {
     const dot = document.getElementById('network-status-dot');
     const text = document.getElementById('network-status-text');
-    if (!dot || !text) return;
+    if (!dot || !text) {
+      return;
+    }
     if (isOnline) {
       dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
       text.textContent = 'Sistema Online';
@@ -225,7 +245,9 @@ export const AppUI = {
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     if (sidebarOverlay) {
       sidebarOverlay.addEventListener('click', () => {
-        if (window.innerWidth < 1024) this.setMobileSidebarState(false);
+        if (window.innerWidth < 1024) {
+          this.setMobileSidebarState(false);
+        }
       });
     }
 
@@ -234,7 +256,7 @@ export const AppUI = {
       historyList: document.getElementById('history-list'),
       crudList: document.getElementById('crud-list'),
       usersList: document.getElementById('user-management-body'),
-      collabList: document.getElementById('collab-list'),
+      collabList: document.getElementById('collab-list')
     };
     const cdf = document.getElementById('current-date-full');
     const cdfShort = document.getElementById('current-date-full-short');
@@ -242,15 +264,19 @@ export const AppUI = {
     const fullDate = now.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: 'long',
-      year: 'numeric',
+      year: 'numeric'
     });
     const shortDate = now.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
+      year: 'numeric'
     });
-    if (cdf) cdf.textContent = fullDate;
-    if (cdfShort) cdfShort.textContent = shortDate;
+    if (cdf) {
+      cdf.textContent = fullDate;
+    }
+    if (cdfShort) {
+      cdfShort.textContent = shortDate;
+    }
 
     // Setup search and filter listeners (only once)
     if (!this._listenersSetup) {
@@ -282,7 +308,9 @@ export const AppUI = {
       document.querySelectorAll('.nav-btn').forEach((btn) => {
         btn.addEventListener('click', (e) => {
           const tab = e.currentTarget.getAttribute('data-tab');
-          if (tab) this.switchTab(tab);
+          if (tab) {
+            this.switchTab(tab);
+          }
         });
       });
 
@@ -340,7 +368,7 @@ export const AppUI = {
     const categoryFilterEl = document.getElementById('inventory-category-filter');
     if (categoryFilterEl && categoryFilterEl.options.length <= 1) {
       const categories = [
-        ...new Set(window.App.Data.tools.map((t) => t.category).filter(Boolean)),
+        ...new Set(window.App.Data.tools.map((t) => t.category).filter(Boolean))
       ].sort();
       categories.forEach((cat) => {
         const option = document.createElement('option');
@@ -370,6 +398,29 @@ export const AppUI = {
         });
       }
     }
+
+    // Adiciona o fechamento por clique no backdrop para todos os modais da tela
+    document.querySelectorAll('dialog').forEach((dialog) => {
+      dialog.addEventListener('click', (event) => {
+        // Verifica se o clique foi fora da área de conteúdo (no backdrop)
+        const rect = dialog.getBoundingClientRect();
+        const isInDialog =
+          rect.top <= event.clientY &&
+          event.clientY <= rect.top + rect.height &&
+          rect.left <= event.clientX &&
+          event.clientX <= rect.left + rect.width;
+        if (!isInDialog) {
+          dialog.close();
+        }
+      });
+
+      // Garante que a lógica de limpeza ou auditoria ocorra de forma idêntica
+      // quer o usuário feche no botão, no clique de fundo ou usando a tecla ESC.
+      dialog.addEventListener('close', () => {
+        // Útil para parar câmeras, limpar formulários nativamente, ou logar métricas:
+        // console.log(`Modal fechado: ${dialog.id}`);
+      });
+    });
   },
   switchTab: function (tab) {
     this.activeTab = tab;
@@ -390,16 +441,23 @@ export const AppUI = {
       management: 'Catálogo de Inventário',
       users: 'Controle de Acesso',
       collaborators: 'Colaboradores',
-      history: 'Auditoria de Sistema',
+      history: 'Auditoria de Sistema'
     };
     const tt = document.getElementById('topbar-title');
-    if (tt) tt.textContent = titleMap[tab] || 'Gestão de Ferramentas';
+    if (tt) {
+      tt.textContent = titleMap[tab] || 'Gestão de Ferramentas';
+    }
     ['dashboard', 'scanner', 'management', 'users', 'collaborators', 'history'].forEach((t) =>
       document.getElementById(`tab-${t}`)?.classList.toggle('hidden', t !== tab)
     );
-    if (window.innerWidth < 1024) this.setMobileSidebarState(false);
-    if (tab !== 'scanner') window.App.Scanner.stopCamera();
-    else window.App.Scanner.focus();
+    if (window.innerWidth < 1024) {
+      this.setMobileSidebarState(false);
+    }
+    if (tab !== 'scanner') {
+      window.App.Scanner.stopCamera();
+    } else {
+      window.App.Scanner.focus();
+    }
     this.renderAll();
 
     const mainContentScroll = document.getElementById('main-content-scroll');
@@ -412,15 +470,23 @@ export const AppUI = {
     document.body.scrollTop = 0;
   },
   renderAll: function () {
-    if (this.activeTab === 'dashboard') this.renderDashboard();
-    else if (this.activeTab === 'management') window.App.CRUDTools.render();
-    else if (this.activeTab === 'users') window.App.CRUDUsers.render();
-    else if (this.activeTab === 'collaborators') window.App.CRUDCollaborators.render();
-    else if (this.activeTab === 'history') this.renderHistory();
+    if (this.activeTab === 'dashboard') {
+      this.renderDashboard();
+    } else if (this.activeTab === 'management') {
+      window.App.CRUDTools.render();
+    } else if (this.activeTab === 'users') {
+      window.App.CRUDUsers.render();
+    } else if (this.activeTab === 'collaborators') {
+      window.App.CRUDCollaborators.render();
+    } else if (this.activeTab === 'history') {
+      this.renderHistory();
+    }
   },
   renderDashboard: function () {
     const list = this.domCache.dashList;
-    if (!list) return;
+    if (!list) {
+      return;
+    }
     if (!window.App.Data.toolsLoaded) {
       list.innerHTML = Array(6).fill(window.Utils.getSkeletonHTML()).join('');
       return;
@@ -433,7 +499,9 @@ export const AppUI = {
 
     const setText = (id, val) => {
       const el = document.getElementById(id);
-      if (el) el.textContent = val;
+      if (el) {
+        el.textContent = val;
+      }
     };
 
     // Update stat cards with percentages
@@ -450,9 +518,11 @@ export const AppUI = {
       }
 
       const canvas = document.getElementById('statusChart');
-      if (!canvas) return; // Canvas not yet rendered
+      if (!canvas) {
+        return;
+      } // Canvas not yet rendered
 
-      let sChart = window.Chart.getChart(canvas);
+      const sChart = window.Chart.getChart(canvas);
       if (sChart) {
         sChart.data.datasets[0].data = [cA, cB, cM];
         sChart.update();
@@ -466,9 +536,9 @@ export const AppUI = {
                 data: [cA, cB, cM],
                 backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
                 borderWidth: 0,
-                hoverOffset: 6,
-              },
-            ],
+                hoverOffset: 6
+              }
+            ]
           },
           options: {
             responsive: true,
@@ -483,22 +553,22 @@ export const AppUI = {
                     const total = tools.length;
                     const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
                     return `${context.label}: ${value} (${percentage}%)`;
-                  },
-                },
+                  }
+                }
               },
               datalabels: {
                 color: '#ffffff',
                 font: {
                   weight: 'bold',
-                  size: 14,
+                  size: 14
                 },
                 formatter: (value) => (value > 0 ? value : ''),
                 anchor: 'center',
-                align: 'center',
-              },
+                align: 'center'
+              }
             },
-            animation: { animateRotate: true, animateScale: true },
-          },
+            animation: { animateRotate: true, animateScale: true }
+          }
         });
       }
 
@@ -521,7 +591,7 @@ export const AppUI = {
             ? ['#3b82f6', '#10b981', '#f59e0b', '#64748b']
             : ['#3b82f6', '#10b981', '#f59e0b'];
 
-        let cChart = window.Chart.getChart(canvasCat);
+        const cChart = window.Chart.getChart(canvasCat);
         if (cChart) {
           cChart.data.labels = catLabels;
           cChart.data.datasets[0].data = catData;
@@ -537,9 +607,9 @@ export const AppUI = {
                   data: catData,
                   backgroundColor: catColors,
                   borderWidth: 0,
-                  hoverOffset: 6,
-                },
-              ],
+                  hoverOffset: 6
+                }
+              ]
             },
             options: {
               responsive: true,
@@ -554,19 +624,19 @@ export const AppUI = {
                       const percentage =
                         tools.length > 0 ? ((value / tools.length) * 100).toFixed(1) : 0;
                       return `${context.label}: ${value} (${percentage}%)`;
-                    },
-                  },
+                    }
+                  }
                 },
                 datalabels: {
                   color: '#ffffff',
                   font: { weight: 'bold', size: 14 },
                   formatter: (value) => (value > 0 ? value : ''),
                   anchor: 'center',
-                  align: 'center',
-                },
+                  align: 'center'
+                }
               },
-              animation: { animateRotate: true, animateScale: true },
-            },
+              animation: { animateRotate: true, animateScale: true }
+            }
           });
         }
       }
@@ -576,6 +646,7 @@ export const AppUI = {
     setText('filter-count-available', cA);
     setText('filter-count-borrowed', cB);
     setText('filter-count-maintenance', cM);
+    this.renderDashboardTimeline();
 
     const cLate = tools.filter((t) => window.App.CRUDTools.isLate(t)).length;
     const cMaintDue = tools.filter((t) => window.App.CRUDTools.isMaintenanceDue(t)).length;
@@ -654,13 +725,13 @@ export const AppUI = {
         const fullName = window.Utils.escapeHTML(t.name);
         const uHtml = t.currentUser
           ? `<span class="font-extrabold text-slate-800 dark:text-slate-200 truncate">${window.Utils.escapeHTML(t.currentUser)}</span>`
-          : `<span class="text-slate-300 font-medium italic">Nenhum responsável</span>`;
+          : '<span class="text-slate-300 font-medium italic">Nenhum responsável</span>';
         const responsibleRow = t.currentUser
           ? `<div class="flex justify-between items-center"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Responsável</span><div class="text-right text-sm max-w-[150px] truncate">${uHtml}</div></div>`
-          : ``;
+          : '';
         const imgHtml = t.imageUrl
           ? `<img src="${window.Utils.escapeHTML(t.imageUrl)}" data-name="${safeName}" onclick="App.UI.showImagePreview(this.src, this.getAttribute('data-name'))" class="w-12 h-12 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shrink-0 cursor-zoom-in" loading="lazy" decoding="async">`
-          : `<div class="w-12 h-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-300 dark:text-slate-600"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>`;
+          : '<div class="w-12 h-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-300 dark:text-slate-600"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>';
         const dotColor =
           t.status === 'borrowed'
             ? 'bg-amber-500'
@@ -678,12 +749,14 @@ export const AppUI = {
         const isMaintDue = window.App.CRUDTools.isMaintenanceDue(t);
         const isMaintWarn = window.App.CRUDTools.isMaintenanceWarning(t);
         let customBadges = '';
-        if (isLate)
+        if (isLate) {
           customBadges += `<span class="px-2 py-0.5 bg-rose-100 text-rose-700 text-[10px] font-bold rounded animate-pulse border border-rose-200 shadow-sm whitespace-nowrap">⚠️ Atrasada (${window.App.CRUDTools.getDaysLate(t)}d)</span>`;
-        if (isMaintDue)
-          customBadges += `<span class="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] font-bold rounded animate-pulse border border-orange-200 shadow-sm whitespace-nowrap">⚠️ Rev. Vencida</span>`;
-        else if (isMaintWarn)
-          customBadges += `<span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded border border-yellow-200 shadow-sm whitespace-nowrap">⏳ Rev. Próxima</span>`;
+        }
+        if (isMaintDue) {
+          customBadges += '<span class="px-2 py-0.5 bg-orange-100 text-orange-700 text-[10px] font-bold rounded animate-pulse border border-orange-200 shadow-sm whitespace-nowrap">⚠️ Rev. Vencida</span>';
+        } else if (isMaintWarn) {
+          customBadges += '<span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded border border-yellow-200 shadow-sm whitespace-nowrap">⏳ Rev. Próxima</span>';
+        }
 
         const overrideBorder = isLate
           ? 'border-2 border-rose-500 shadow-rose-500/20'
@@ -700,17 +773,25 @@ export const AppUI = {
   },
   setQuickFilter: function (filter) {
     const filterSelect = document.getElementById('dash-filter');
-    if (filterSelect) filterSelect.value = filter;
+    if (filterSelect) {
+      filterSelect.value = filter;
+    }
     document.querySelectorAll('.quick-filter-btn').forEach((btn) => {
       btn.classList.remove('active');
-      if (btn.dataset.filter === filter) btn.classList.add('active');
+      if (btn.dataset.filter === filter) {
+        btn.classList.add('active');
+      }
     });
     this.renderDashboard();
   },
   renderHistory: function () {
     const list = this.domCache.historyList;
-    if (!list) return;
-    if (!window.App.Data.history) return;
+    if (!list) {
+      return;
+    }
+    if (!window.App.Data.history) {
+      return;
+    }
     const q = window.Utils.removeAccents(
       document.getElementById('history-search')?.value || ''
     ).toLowerCase();
@@ -758,35 +839,88 @@ export const AppUI = {
     const lb = document.getElementById('image-lightbox'),
       img = document.getElementById('lightbox-img'),
       cap = document.getElementById('lightbox-caption');
-    if (img) img.src = url;
-    if (cap) cap.textContent = title || 'Visualização';
+    if (img) {
+      img.src = url;
+    }
+    if (cap) {
+      cap.textContent = title || 'Visualização';
+    }
     if (lb) {
-      lb.classList.remove('hidden');
-      lb.classList.add('flex');
+      lb.showModal();
     }
   },
   closeImagePreview: function () {
     const lb = document.getElementById('image-lightbox');
     if (lb) {
-      lb.classList.add('hidden');
-      lb.classList.remove('flex');
+      lb.close();
     }
   },
   showToast: function (msg, type = 'info') {
     // Proxy Pattern: Repassa a chamada para o novo NotificationManager Core
     try {
-      if (type === 'success') notifications.success(msg);
-      else if (type === 'error') notifications.error(msg);
-      else if (type === 'warning') notifications.warning(msg);
-      else notifications.info(msg);
-    } catch (e) {
+      if (type === 'success') {
+        notifications.success(msg);
+      } else if (type === 'error') {
+        notifications.error(msg);
+      } else if (type === 'warning') {
+        notifications.warning(msg);
+      } else {
+        notifications.info(msg);
+      }
+    } catch {
       window.Logger.warn('NotificationManager falhou. Fallback log:', msg);
     }
+  },
+  renderDashboardTimeline: function () {
+    const list = document.getElementById('dash-mini-timeline');
+    if (!list) {
+      return;
+    }
+
+    const logs = (window.App?.Data?.history || []).slice(0, 3);
+    if (!logs.length) {
+      list.innerHTML =
+        '<div class="text-center py-4 text-slate-400 text-xs font-semibold">Sem movimentações recentes</div>';
+      return;
+    }
+
+    const typeMeta = {
+      in: {
+        label: 'Devolução',
+        status: 'Concluída',
+        color: 'emerald',
+        icon: '<path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />'
+      },
+      out: {
+        label: 'Empréstimo',
+        status: 'Registrado',
+        color: 'amber',
+        icon: '<path d="M17 14H3l4 4" /><path d="M7 10h14l-4-4" />'
+      },
+      maintenance: {
+        label: 'Manutenção',
+        status: 'Registrada',
+        color: 'rose',
+        icon: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />'
+      }
+    };
+
+    list.innerHTML = logs
+      .map((log, idx) => {
+        const meta = typeMeta[log.type] || typeMeta.maintenance;
+        const tool = window.Utils.escapeHTML(log.toolName || 'Ferramenta não informada');
+        const date = window.Utils.formatDate(log.date);
+
+        return `<div class="flex gap-3 items-start animate-fade-in" style="animation-delay: ${idx * 100}ms"><div class="w-8 h-8 rounded-full bg-${meta.color}-100 dark:bg-${meta.color}-900/30 text-${meta.color}-600 dark:text-${meta.color}-400 flex items-center justify-center shrink-0"><svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${meta.icon}</svg></div><div class="min-w-0"><p class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">${meta.label} <span class="text-${meta.color}-600 dark:text-${meta.color}-400">${meta.status}</span></p><p class="text-[10px] text-slate-500 truncate">${tool} - ${date}</p></div></div>`;
+      })
+      .join('');
   },
   openMetricsModal: function () {
     const m = document.getElementById('metrics-modal');
     const content = document.getElementById('metrics-modal-content');
-    if (!m || !content) return;
+    if (!m || !content) {
+      return;
+    }
 
     // Puxamos o relatório ao vivo do MetricsManager
     const report = metrics.getReport();
@@ -820,14 +954,12 @@ export const AppUI = {
       </div>
     `;
 
-    m.classList.remove('hidden');
-    m.classList.add('flex');
+    m.showModal();
   },
   closeMetricsModal: function () {
     const m = document.getElementById('metrics-modal');
     if (m) {
-      m.classList.add('hidden');
-      m.classList.remove('flex');
+      m.close();
     }
-  },
+  }
 };

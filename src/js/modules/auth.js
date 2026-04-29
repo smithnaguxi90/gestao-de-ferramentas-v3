@@ -3,7 +3,7 @@ import {
   sendPasswordResetEmail,
   onAuthStateChanged,
   signOut,
-  updatePassword,
+  updatePassword
 } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 import {
   collection,
@@ -12,7 +12,7 @@ import {
   updateDoc,
   query,
   where,
-  limit,
+  limit
 } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 import { auth, db, DB_BASE_PATH, COLLECTIONS } from '../app.js';
 import { cacheManager } from '../core/CacheManager.js';
@@ -21,7 +21,9 @@ import { metrics } from '../core/MetricsManager.js';
 export const AppAuth = {
   _initialized: false,
   init: function () {
-    if (this._initialized) return;
+    if (this._initialized) {
+      return;
+    }
     this._initialized = true;
 
     document.getElementById('toggle-password')?.addEventListener('click', () => {
@@ -38,7 +40,9 @@ export const AppAuth = {
       const em = document.getElementById('login-email').value,
         p = document.getElementById('login-password').value;
       const btn = document.getElementById('btn-login');
-      if (btn) btn.disabled = true;
+      if (btn) {
+        btn.disabled = true;
+      }
       document.getElementById('login-text').innerHTML =
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2 animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Autenticando...';
       try {
@@ -46,7 +50,9 @@ export const AppAuth = {
         metrics.trackAction('auth', 'login_success');
       } catch (err) {
         window.Logger.error('Acesso Negado.', err);
-        if (btn) btn.disabled = false;
+        if (btn) {
+          btn.disabled = false;
+        }
         document.getElementById('login-text').textContent = 'Acessar Sistema';
         metrics.trackAction('auth', 'login_error', err.code);
       }
@@ -72,7 +78,9 @@ export const AppAuth = {
     window.App.Data.init();
     window.App.Session.init();
     const loginPasswordField = document.getElementById('login-password');
-    if (loginPasswordField) loginPasswordField.value = '';
+    if (loginPasswordField) {
+      loginPasswordField.value = '';
+    }
   },
   _handleUnauthenticatedUser() {
     document.getElementById('login-screen')?.classList.remove('hidden');
@@ -80,9 +88,13 @@ export const AppAuth = {
     window.App.Session.cleanup();
     window.App.Data.destroyListeners();
     const loginButton = document.getElementById('btn-login');
-    if (loginButton) loginButton.disabled = false;
+    if (loginButton) {
+      loginButton.disabled = false;
+    }
     const loginText = document.getElementById('login-text');
-    if (loginText) loginText.textContent = 'Acessar Sistema';
+    if (loginText) {
+      loginText.textContent = 'Acessar Sistema';
+    }
   },
   async _fetchAndCacheUserProfile(email) {
     const cacheKey = `user_profile_${email}`;
@@ -106,21 +118,23 @@ export const AppAuth = {
         id: matchedDoc.id,
         uName: dbUser.name ? dbUser.name.split(' ')[0] : 'Usuário',
         isAdm: dbUser.accessLevel === 'Administrador',
-        isRestricted: dbUser.isRestricted === true,
+        isRestricted: dbUser.isRestricted === true
       };
     }
 
     return { id: null, uName: 'Usuário', isAdm: false, isRestricted: false };
   },
   async _updateUserSession(userId) {
-    if (!userId) return;
+    if (!userId) {
+      return;
+    }
     const ipInfo = await cacheManager.getOrSet(
       'current_device_ip',
       async () => {
         try {
           const res = await fetch('https://api.ipify.org?format=json');
           return (await res.json()).ip;
-        } catch (e) {
+        } catch {
           return 'IP Desconhecido';
         }
       },
@@ -130,10 +144,16 @@ export const AppAuth = {
     const ua = navigator.userAgent;
     let os = 'OS Desconhecido',
       browser = 'Navegador Desconhecido';
-    if (ua.includes('Win')) os = 'Windows';
-    else if (ua.includes('Mac')) os = 'MacOS';
-    if (ua.includes('Edg')) browser = 'Edge';
-    else if (ua.includes('Chrome')) browser = 'Chrome';
+    if (ua.includes('Win')) {
+      os = 'Windows';
+    } else if (ua.includes('Mac')) {
+      os = 'MacOS';
+    }
+    if (ua.includes('Edg')) {
+      browser = 'Edge';
+    } else if (ua.includes('Chrome')) {
+      browser = 'Chrome';
+    }
 
     window.App.Session.currentIp = ipInfo;
     window.App.Session.currentDevice = `${browser} / ${os}`;
@@ -141,7 +161,7 @@ export const AppAuth = {
     updateDoc(doc(db, DB_BASE_PATH, COLLECTIONS.USERS, userId), {
       lastLogin: new Date().toISOString(),
       lastIp: ipInfo,
-      lastDevice: `${browser} / ${os}`,
+      lastDevice: `${browser} / ${os}`
     }).catch((e) => window.Logger.warn('Erro ao atualizar ultimo login', e));
   },
   _updateUIForUser(uName, isAdm, isRestricted) {
@@ -156,7 +176,9 @@ export const AppAuth = {
       isRestricted && !isAdm ? 'none' : '';
 
     const restrictedTabs = ['management', 'users', 'history'];
-    if (isRestricted && !isAdm) restrictedTabs.push('collaborators');
+    if (isRestricted && !isAdm) {
+      restrictedTabs.push('collaborators');
+    }
     if (!isAdm && restrictedTabs.includes(window.App.UI.activeTab)) {
       window.App.UI.switchTab('dashboard');
     }
@@ -169,16 +191,14 @@ export const AppAuth = {
     } else {
       const m = document.getElementById('logout-modal');
       if (m) {
-        m.classList.remove('hidden');
-        m.classList.add('flex');
+        m.showModal();
       }
     }
   },
   closeLogoutModal: function () {
     const m = document.getElementById('logout-modal');
     if (m) {
-      m.classList.add('hidden');
-      m.classList.remove('flex');
+      m.close();
     }
   },
   confirmLogout: function () {
@@ -202,14 +222,22 @@ export const AppAuth = {
       const ac = document.getElementById('profile-modal-account-created');
       const avatarContainer = document.getElementById('profile-modal-avatar');
 
-      if (n) n.textContent = name;
-      if (r) r.textContent = role;
+      if (n) {
+        n.textContent = name;
+      }
+      if (r) {
+        r.textContent = role;
+      }
       if (e) {
         e.textContent = email;
         e.title = email;
       }
-      if (i) i.textContent = ip;
-      if (d) d.textContent = device;
+      if (i) {
+        i.textContent = ip;
+      }
+      if (d) {
+        d.textContent = device;
+      }
 
       const currentUserData = window.App.Data.users.find((u) => u.email === email);
 
@@ -247,22 +275,19 @@ export const AppAuth = {
         scrollable.scrollTop = 0;
       }
 
-      m.classList.remove('hidden');
-      m.classList.add('flex');
+      m.showModal();
     }
   },
   closeProfileModal: function () {
     const m = document.getElementById('profile-modal');
     if (m) {
-      m.classList.add('hidden');
-      m.classList.remove('flex');
+      m.close();
     }
   },
   openPasswordModal: function () {
     const m = document.getElementById('password-modal');
     if (m) {
-      m.classList.remove('hidden');
-      m.classList.add('flex');
+      m.showModal();
     }
     const newPass = document.getElementById('new-password');
     const confirmPass = document.getElementById('confirm-password');
@@ -305,7 +330,9 @@ export const AppAuth = {
   },
   togglePasswordVisibility: function (inputId, iconId) {
     const input = document.getElementById(inputId);
-    if (!input) return;
+    if (!input) {
+      return;
+    }
     const isPassword = input.type === 'password';
     input.type = isPassword ? 'text' : 'password';
     const iconBtn = document.getElementById(iconId);
@@ -320,18 +347,30 @@ export const AppAuth = {
   },
   checkPasswordStrength: function (password) {
     let strength = 0;
-    if (password.length >= 8) strength += 1;
-    if (password.length >= 12) strength += 1;
-    if (/[A-Z]/.test(password)) strength += 1;
-    if (/[0-9]/.test(password)) strength += 1;
-    if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+    if (password.length >= 8) {
+      strength += 1;
+    }
+    if (password.length >= 12) {
+      strength += 1;
+    }
+    if (/[A-Z]/.test(password)) {
+      strength += 1;
+    }
+    if (/[0-9]/.test(password)) {
+      strength += 1;
+    }
+    if (/[^A-Za-z0-9]/.test(password)) {
+      strength += 1;
+    }
     this.updateStrengthUI(strength);
     return strength;
   },
   updateStrengthUI: function (strength) {
     const bar = document.getElementById('password-strength-bar');
     const text = document.getElementById('password-strength-text');
-    if (!bar || !text) return;
+    if (!bar || !text) {
+      return;
+    }
     let width = '0%',
       color = 'bg-red-500',
       label = 'Muito Fraca';
@@ -374,7 +413,9 @@ export const AppAuth = {
     const btn = document.getElementById('btn-save-password');
     const newPassInput = document.getElementById('new-password');
     const confirmPassInput = document.getElementById('confirm-password');
-    if (!msg || !btn || !newPassInput || !confirmPassInput) return;
+    if (!msg || !btn || !newPassInput || !confirmPassInput) {
+      return;
+    }
     newPassInput.classList.remove(
       'border-emerald-500',
       'border-rose-500',
@@ -410,25 +451,30 @@ export const AppAuth = {
   closePasswordModal: function () {
     const m = document.getElementById('password-modal');
     if (m) {
-      m.classList.add('hidden');
-      m.classList.remove('flex');
+      m.close();
     }
   },
   updateUserPassword: async function () {
     const np = document.getElementById('new-password').value,
       cp = document.getElementById('confirm-password').value;
-    if (!np || !cp) return window.App.UI.showToast('Preencha todos os campos.', 'error');
-    if (np.length < 8)
+    if (!np || !cp) {
+      return window.App.UI.showToast('Preencha todos os campos.', 'error');
+    }
+    if (np.length < 8) {
       return window.App.UI.showToast('A senha deve ter pelo menos 8 caracteres.', 'error');
-    if (np !== cp) return window.App.UI.showToast('As senhas não conferem.', 'error');
+    }
+    if (np !== cp) {
+      return window.App.UI.showToast('As senhas não conferem.', 'error');
+    }
     const btn = document.getElementById('btn-save-password');
     const originalContent = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML =
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Atualizando...';
     try {
-      if (typeof auth === 'undefined' || !auth || !auth.currentUser)
+      if (typeof auth === 'undefined' || !auth || !auth.currentUser) {
         throw new Error('Sessão expirada ou não iniciada.');
+      }
       await updatePassword(auth.currentUser, np);
       window.App.UI.showToast('Senha atualizada com sucesso!', 'success');
       this.closePasswordModal();
@@ -449,23 +495,25 @@ export const AppAuth = {
   openForgotModal: function () {
     const m = document.getElementById('forgot-password-modal');
     if (m) {
-      m.classList.remove('hidden');
-      m.classList.add('flex');
+      m.showModal();
     }
     const em = document.getElementById('forgot-email-input');
     const loginEm = document.getElementById('login-email');
-    if (em && loginEm) em.value = loginEm.value;
+    if (em && loginEm) {
+      em.value = loginEm.value;
+    }
   },
   closeForgotModal: function () {
     const m = document.getElementById('forgot-password-modal');
     if (m) {
-      m.classList.add('hidden');
-      m.classList.remove('flex');
+      m.close();
     }
   },
   sendForgotEmail: async function () {
     const em = document.getElementById('forgot-email-input').value;
-    if (!em) return window.App.UI.showToast('Digite o e-mail cadastrado.', 'warning');
+    if (!em) {
+      return window.App.UI.showToast('Digite o e-mail cadastrado.', 'warning');
+    }
     const btn = document.getElementById('btn-send-forgot'),
       orig = btn.innerHTML;
     btn.disabled = true;
@@ -475,11 +523,11 @@ export const AppAuth = {
       await sendPasswordResetEmail(auth, em);
       window.App.UI.showToast('Instrucoes enviadas para o e-mail.', 'success');
       this.closeForgotModal();
-    } catch (err) {
+    } catch {
       window.App.UI.showToast('Erro ao enviar. O e-mail esta correto?', 'error');
     } finally {
       btn.disabled = false;
       btn.innerHTML = orig;
     }
-  },
+  }
 };

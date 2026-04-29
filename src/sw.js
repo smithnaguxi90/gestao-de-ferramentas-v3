@@ -7,7 +7,7 @@ precacheAndRoute(self.__WB_MANIFEST || []);
 const CACHE_NAME = 'coeng-tools-cache-v6';
 
 // INSTALAÇÃO
-self.addEventListener('install', (event) => {
+self.addEventListener('install', () => {
   console.log('PWA: Novo Service Worker Instalado (VitePWA)');
   self.skipWaiting();
 });
@@ -33,8 +33,12 @@ self.addEventListener('activate', (event) => {
 // (O precacheAndRoute acima já responde pelos arquivos principais em cache.
 // O que não estiver lá cai nesse fetch dinâmico)
 self.addEventListener('fetch', (event) => {
-  if (!event.request.url.startsWith(self.location.origin)) return;
-  if (event.request.method !== 'GET') return;
+  if (!event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+  if (event.request.method !== 'GET') {
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {

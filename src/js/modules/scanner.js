@@ -12,11 +12,13 @@ export const AppScanner = {
     today: 0,
     success: 0,
     errors: 0,
-    totalTime: 0,
+    totalTime: 0
   },
 
   init: function () {
-    if (this._initialized) return;
+    if (this._initialized) {
+      return;
+    }
     this._initialized = true;
 
     const scannerKeyHandler = (e) => {
@@ -24,10 +26,13 @@ export const AppScanner = {
         window.App.UI.activeTab !== 'scanner' ||
         this.currentMode !== 'usb' ||
         ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)
-      )
+      ) {
         return;
+      }
       if (e.key === 'Enter') {
-        if (this.buffer.length > 2) this.processCode(this.buffer);
+        if (this.buffer.length > 2) {
+          this.processCode(this.buffer);
+        }
         this.buffer = '';
       } else if (e.key.length === 1) {
         this.buffer += e.key;
@@ -95,26 +100,32 @@ export const AppScanner = {
       'scanner-stats',
       JSON.stringify({
         date: new Date().toDateString(),
-        stats: this.scanStats,
+        stats: this.scanStats
       })
     );
   },
 
   updateStatsDisplay: function () {
     const statTodayEl = document.getElementById('stat-scans-today');
-    if (statTodayEl) statTodayEl.textContent = this.scanStats.today;
+    if (statTodayEl) {
+      statTodayEl.textContent = this.scanStats.today;
+    }
 
     const total = this.scanStats.success + this.scanStats.errors;
     const rate = total > 0 ? Math.round((this.scanStats.success / total) * 100) : 100;
     const statRateEl = document.getElementById('stat-success-rate');
-    if (statRateEl) statRateEl.textContent = `${rate}%`;
+    if (statRateEl) {
+      statRateEl.textContent = `${rate}%`;
+    }
 
     const avg =
       this.scanStats.success > 0
         ? (this.scanStats.totalTime / this.scanStats.success).toFixed(1)
         : '--';
     const statAvgEl = document.getElementById('stat-avg-time');
-    if (statAvgEl) statAvgEl.textContent = avg !== '--' ? `${avg}s` : '--';
+    if (statAvgEl) {
+      statAvgEl.textContent = avg !== '--' ? `${avg}s` : '--';
+    }
   },
 
   addRecentScan: function (tool, success) {
@@ -123,7 +134,7 @@ export const AppScanner = {
       name: tool.name,
       status: tool.status,
       time: new Date(),
-      success: success,
+      success: success
     };
     this.recentScans.unshift(scan);
     if (this.recentScans.length > 10) {
@@ -134,7 +145,9 @@ export const AppScanner = {
 
   renderRecentScans: function () {
     const list = document.getElementById('recent-scans-list');
-    if (!list) return;
+    if (!list) {
+      return;
+    }
 
     if (this.recentScans.length === 0) {
       list.innerHTML =
@@ -146,7 +159,7 @@ export const AppScanner = {
       .map((scan) => {
         const timeStr = scan.time.toLocaleTimeString('pt-BR', {
           hour: '2-digit',
-          minute: '2-digit',
+          minute: '2-digit'
         });
 
         let statusColor =
@@ -183,8 +196,12 @@ export const AppScanner = {
         'w-full sm:w-auto flex items-center justify-center px-3 sm:px-4 py-2.5 bg-slate-700 text-slate-300 font-bold rounded-xl text-sm hover:bg-slate-600 transition-all hover:scale-105 active:scale-95 min-h-11';
     const u = document.getElementById('btn-mode-usb'),
       c = document.getElementById('btn-mode-cam');
-    if (u) u.className = m === 'usb' ? a : ia;
-    if (c) c.className = m === 'cam' ? a : ia;
+    if (u) {
+      u.className = m === 'usb' ? a : ia;
+    }
+    if (c) {
+      c.className = m === 'cam' ? a : ia;
+    }
     const camContainer = document.getElementById('mode-cam-container');
     if (camContainer) {
       if (m === 'cam') {
@@ -213,7 +230,9 @@ export const AppScanner = {
 
     if (m === 'usb') {
       const h = document.getElementById('hidden-scanner');
-      if (h) setTimeout(() => h.focus(), 100);
+      if (h) {
+        setTimeout(() => h.focus(), 100);
+      }
     }
 
     m === 'cam' ? this.startCamera() : this.stopCamera();
@@ -241,7 +260,9 @@ export const AppScanner = {
       return this.setMode('usb');
     }
     try {
-      if (!this.html5QrCode) this.html5QrCode = new window.Html5Qrcode('reader');
+      if (!this.html5QrCode) {
+        this.html5QrCode = new window.Html5Qrcode('reader');
+      }
       await this.stopCamera();
       const cfg = { fps: 10, qrbox: { width: 250, height: 250 } };
       const succ = (c) => {
@@ -250,7 +271,7 @@ export const AppScanner = {
       };
       await this.html5QrCode.start({ facingMode: 'environment' }, cfg, succ, () => {});
       window.Logger.info('Câmera traseira iniciada com sucesso.');
-    } catch (e) {
+    } catch {
       try {
         await this.html5QrCode.start(
           { facingMode: 'user' },
@@ -283,7 +304,9 @@ export const AppScanner = {
     }
   },
   stopCamera: async function () {
-    if (!this.html5QrCode) return;
+    if (!this.html5QrCode) {
+      return;
+    }
     try {
       if (this.html5QrCode.getState() === 2 || this.html5QrCode.isScanning) {
         await this.html5QrCode.stop();
@@ -294,16 +317,20 @@ export const AppScanner = {
     } finally {
       this.isTorchOn = false;
       const torchIcon = document.getElementById('torch-icon');
-      if (torchIcon) torchIcon.classList.remove('text-yellow-400');
+      if (torchIcon) {
+        torchIcon.classList.remove('text-yellow-400');
+      }
     }
   },
   toggleTorch: async function () {
-    if (!this.html5QrCode || this.html5QrCode.getState() !== 2) return; // 2 === SCANNING
+    if (!this.html5QrCode || this.html5QrCode.getState() !== 2) {
+      return;
+    } // 2 === SCANNING
 
     this.isTorchOn = !this.isTorchOn;
     try {
       await this.html5QrCode.applyVideoConstraints({
-        advanced: [{ torch: this.isTorchOn }],
+        advanced: [{ torch: this.isTorchOn }]
       });
       const torchIcon = document.getElementById('torch-icon');
       if (torchIcon) {
@@ -321,24 +348,33 @@ export const AppScanner = {
       );
       this.isTorchOn = false;
       const torchIcon = document.getElementById('torch-icon');
-      if (torchIcon) torchIcon.classList.remove('text-yellow-400');
+      if (torchIcon) {
+        torchIcon.classList.remove('text-yellow-400');
+      }
     }
   },
   focus: function () {
     const h = document.getElementById('hidden-scanner');
-    if (!this.currentTool && this.currentMode === 'usb' && h) h.focus();
+    if (!this.currentTool && this.currentMode === 'usb' && h) {
+      h.focus();
+    }
   },
   processCode: function (c) {
     const startTime = Date.now();
     const searchCode = window.Utils.removeAccents(c).toLowerCase();
     const t = window.App.Data.tools.find(
-      (x) => x.code != null && window.Utils.removeAccents(x.code).toLowerCase() === searchCode
+      (x) =>
+        x.code !== null &&
+        x.code !== undefined &&
+        window.Utils.removeAccents(x.code).toLowerCase() === searchCode
     );
 
     if (!t) {
       window.AudioSys.playBeep('error');
       // Feedback tátil de erro (vibração dupla) em dispositivos suportados
-      if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
+      }
 
       window.App.UI.showToast('Patrimônio não localizado.', 'error');
 
@@ -351,7 +387,7 @@ export const AppScanner = {
         {
           code: c,
           name: 'Não encontrado',
-          status: 'error',
+          status: 'error'
         },
         false
       );
@@ -367,7 +403,9 @@ export const AppScanner = {
 
     window.AudioSys.playBeep('success');
     // Feedback tátil de sucesso (vibração única) em dispositivos suportados
-    if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(100);
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate(100);
+    }
 
     const elapsedTime = (Date.now() - startTime) / 1000;
 
@@ -390,25 +428,33 @@ export const AppScanner = {
     }
 
     const sli = document.getElementById('scanner-line-indicator');
-    if (sli)
+    if (sli) {
       sli.className =
         'absolute top-0 left-0 w-full h-2 transition-all duration-500 ' +
         (t.status === 'available' ? 'bg-emerald-500' : 'bg-rose-500');
+    }
     const ric = document.getElementById('res-image-container');
-    if (ric)
+    if (ric) {
       ric.innerHTML = t.imageUrl
         ? `<img src="${window.Utils.escapeHTML(t.imageUrl)}" class="w-16 h-16 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 shadow-sm" loading="lazy" decoding="async">`
-        : `<div class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-slate-300 dark:text-slate-600"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>`;
+        : '<div class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-slate-300 dark:text-slate-600"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></div>';
+    }
     const sT = (id, txt) => {
       const el = document.getElementById(id);
-      if (el) el.textContent = txt;
+      if (el) {
+        el.textContent = txt;
+      }
     };
     const rcat = document.getElementById('res-category');
-    if (rcat && rcat.querySelector('span')) rcat.querySelector('span').textContent = t.category;
+    if (rcat && rcat.querySelector('span')) {
+      rcat.querySelector('span').textContent = t.category;
+    }
     sT('res-name', t.name);
     sT('res-code', t.code);
     const rbdg = document.getElementById('res-badge-container');
-    if (rbdg) rbdg.innerHTML = window.Utils.getBadgeHTML(t.status);
+    if (rbdg) {
+      rbdg.innerHTML = window.Utils.getBadgeHTML(t.status);
+    }
 
     const quickActions = document.getElementById('scanner-quick-actions');
     if (quickActions) {
@@ -420,14 +466,15 @@ export const AppScanner = {
     );
     if (t.status === 'borrowed') {
       const rui = document.getElementById('return-user-info');
-      if (rui)
+      if (rui) {
         rui.innerHTML = `Com: <strong>${window.Utils.escapeHTML(t.currentUser || '-')}</strong>`;
+      }
       document.getElementById('scanner-return')?.classList.remove('hidden');
       setTimeout(() => document.getElementById('btn-return')?.focus(), 100);
     } else if (t.status === 'available') {
       const bStat = document.getElementById('scanner-status-box');
       if (bStat) {
-        bStat.innerHTML = `<div class="flex items-start text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 p-5 rounded-xl border border-emerald-200 dark:border-emerald-800 shadow-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-4 mt-0.5 text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><div><p class="font-extrabold text-lg tracking-tight">Pronta para Uso</p><p class="text-sm font-medium mt-1">Autorize a retirada abaixo.</p></div></div>`;
+        bStat.innerHTML = '<div class="flex items-start text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 p-5 rounded-xl border border-emerald-200 dark:border-emerald-800 shadow-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-4 mt-0.5 text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><div><p class="font-extrabold text-lg tracking-tight">Pronta para Uso</p><p class="text-sm font-medium mt-1">Autorize a retirada abaixo.</p></div></div>';
         bStat.classList.remove('hidden');
       }
       document.getElementById('scanner-checkout')?.classList.remove('hidden');
@@ -435,8 +482,9 @@ export const AppScanner = {
 
       if (t.nextMaintenance && new Date(t.nextMaintenance).getTime() < Date.now()) {
         window.AudioSys.playBeep('error');
-        if (typeof navigator !== 'undefined' && navigator.vibrate)
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
           navigator.vibrate([200, 100, 200]);
+        }
         return window.App.UI.showToast(
           'Empréstimo bloqueado: Ferramenta com revisão/calibração vencida.',
           'error'
@@ -449,13 +497,17 @@ export const AppScanner = {
       }
     } else {
       window.AudioSys.playBeep('error');
-      if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
+      }
       window.App.UI.showToast('Em Manutenção ativa.', 'warning');
       setTimeout(() => this.reset(), 3000);
     }
   },
   processReturn: function () {
-    if (!this.currentTool) return;
+    if (!this.currentTool) {
+      return;
+    }
     document.getElementById('scanner-return')?.classList.add('hidden');
     document.getElementById('scanner-processing')?.classList.remove('hidden');
     setTimeout(async () => {
@@ -465,20 +517,24 @@ export const AppScanner = {
           {
             status: 'available',
             currentUser: null,
-            lastAction: new Date().toISOString(),
+            lastAction: new Date().toISOString()
           },
           'in',
           this.currentTool.currentUser
         );
         window.AudioSys.playBeep('success');
-        if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(100);
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          navigator.vibrate(100);
+        }
         window.App.UI.showToast('Devolução registrada.', 'success');
         document.getElementById('scanner-processing')?.classList.add('hidden');
         const rbc = document.getElementById('res-badge-container');
-        if (rbc) rbc.innerHTML = window.Utils.getBadgeHTML('available');
+        if (rbc) {
+          rbc.innerHTML = window.Utils.getBadgeHTML('available');
+        }
         const ssb = document.getElementById('scanner-status-box');
         if (ssb) {
-          ssb.innerHTML = `<div class="text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 p-6 rounded-2xl border border-emerald-200 dark:border-emerald-800 shadow-sm"><p class="font-black text-xl tracking-tight text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-1"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Devolução Registrada</p></div>`;
+          ssb.innerHTML = '<div class="text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 p-6 rounded-2xl border border-emerald-200 dark:border-emerald-800 shadow-sm"><p class="font-black text-xl tracking-tight text-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block mr-1"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Devolução Registrada</p></div>';
           ssb.classList.remove('hidden');
         }
         setTimeout(() => this.reset(), 2000);
@@ -494,20 +550,28 @@ export const AppScanner = {
     const bV = window.Utils.removeAccents(
       document.getElementById('checkout-user-badge')?.value.trim() || ''
     ).toLowerCase();
-    if (!bV || !this.currentTool) return;
+    if (!bV || !this.currentTool) {
+      return;
+    }
     const u = window.App.Data.collaborators.find(
       (x) =>
-        (x.badge != null && window.Utils.removeAccents(x.badge).toLowerCase() === bV) ||
-        window.Utils.removeAccents(x.name).toLowerCase() === bV
+        ((x.badge !== null &&
+          x.badge !== undefined &&
+          window.Utils.removeAccents(x.badge).toLowerCase() === bV) ||
+          window.Utils.removeAccents(x.name).toLowerCase() === bV)
     );
     if (!u) {
       window.AudioSys.playBeep('error');
-      if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
+      }
       return window.App.UI.showToast('Colaborador não localizado.', 'error');
     }
     if (u.status === 'inactive') {
       window.AudioSys.playBeep('error');
-      if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]);
+      }
       return window.App.UI.showToast('Colaborador bloqueado/inativo.', 'error');
     }
     ['scanner-checkout', 'scanner-status-box'].forEach((id) =>
@@ -521,13 +585,15 @@ export const AppScanner = {
           {
             status: 'borrowed',
             currentUser: u.name,
-            lastAction: new Date().toISOString(),
+            lastAction: new Date().toISOString()
           },
           'out',
           u.name
         );
         window.AudioSys.playBeep('success');
-        if (typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(100);
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          navigator.vibrate(100);
+        }
         window.App.UI.showToast(`Autorizada para ${u.name}`, 'success');
 
         if (window.App.PDF && typeof window.App.PDF.generateReceipt === 'function') {
@@ -541,7 +607,9 @@ export const AppScanner = {
 
         document.getElementById('scanner-processing')?.classList.add('hidden');
         const rbc = document.getElementById('res-badge-container');
-        if (rbc) rbc.innerHTML = window.Utils.getBadgeHTML('borrowed');
+        if (rbc) {
+          rbc.innerHTML = window.Utils.getBadgeHTML('borrowed');
+        }
         const ssb = document.getElementById('scanner-status-box');
         if (ssb) {
           ssb.innerHTML = `<div class="text-amber-900 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/30 p-6 rounded-2xl border border-amber-200 dark:border-amber-800 shadow-sm text-center"><p class="font-black text-xl tracking-tight">Responsabilidade Transferida</p><p class="text-sm font-bold mt-2 opacity-80">Guarda: ${window.Utils.escapeHTML(u.name)}</p></div>`;
@@ -567,16 +635,23 @@ export const AppScanner = {
     }
 
     const msi = document.getElementById('manual-scan-input');
-    if (msi) msi.value = '';
+    if (msi) {
+      msi.value = '';
+    }
     const sli = document.getElementById('scanner-line-indicator');
-    if (sli)
+    if (sli) {
       sli.className =
         'absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-500 via-indigo-500 to-brand-500';
-    if (this.currentMode === 'cam') this.startCamera();
+    }
+    if (this.currentMode === 'cam') {
+      this.startCamera();
+    }
     this.focus();
   },
   quickAction: function (action) {
-    if (!this.currentTool) return;
+    if (!this.currentTool) {
+      return;
+    }
 
     switch (action) {
       case 'loan':
@@ -586,7 +661,7 @@ export const AppScanner = {
       case 'return':
         this.processReturn();
         break;
-      case 'details':
+      case 'details': {
         window.App.UI.switchTab('management');
         const searchInput = document.getElementById('tools-search');
         if (searchInput) {
@@ -594,6 +669,7 @@ export const AppScanner = {
           searchInput.dispatchEvent(new Event('input'));
         }
         break;
+      }
     }
-  },
+  }
 };

@@ -2,9 +2,8 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getAuth } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 import {
   getFirestore,
-  persistentLocalCache,
   enableIndexedDbPersistence,
-  clearIndexedDbPersistence,
+  clearIndexedDbPersistence
 } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
 import { AppAuth } from './modules/auth.js';
@@ -13,7 +12,20 @@ import { AppUI } from './modules/ui.js';
 import { AppSession } from './modules/session.js';
 import { AppScanner } from './modules/scanner.js';
 import { ResponsiveManager } from './core/ResponsiveManager.js';
-import * as AdvUtils from './utils/AdvancedUtils.js';
+import {
+  debounce,
+  withTimeout,
+  removeAccents,
+  escapeHTML,
+  loadScript,
+  formatDate,
+  compressImageToBase64,
+  getBadgeHTML,
+  getSkeletonHTML,
+  getEmptyStateHTML,
+  Logger,
+  AudioSys
+} from './utils/AdvancedUtils.js';
 import { AppCRUDUsers } from './modules/users.js';
 import { AppCRUDTools } from './modules/tools.js';
 import { AppCRUDCollaborators } from './modules/collaborators.js';
@@ -23,9 +35,18 @@ import { CONFIG, DB_BASE_PATH, COLLECTIONS, FIREBASE_CONFIG } from './config/con
 export { CONFIG, DB_BASE_PATH, COLLECTIONS };
 
 // 2. Utils & Logger (Inlined from utils.js)
-const Utils = AdvUtils;
-const Logger = AdvUtils.Logger;
-const AudioSys = AdvUtils.AudioSys;
+const Utils = Object.freeze({
+  debounce,
+  withTimeout,
+  removeAccents,
+  escapeHTML,
+  loadScript,
+  formatDate,
+  compressImageToBase64,
+  getBadgeHTML,
+  getSkeletonHTML,
+  getEmptyStateHTML
+});
 
 // 3. Firebase Setup
 const firebaseApp = initializeApp(FIREBASE_CONFIG);
@@ -35,9 +56,9 @@ export const db = getFirestore(firebaseApp);
 
 // Habilita a persistência offline do Firestore
 enableIndexedDbPersistence(db).catch((err) => {
-  if (err.code == 'failed-precondition') {
+  if (err.code === 'failed-precondition') {
     Logger.warn('PWA: Persistência do Firestore falhou (múltiplas abas abertas).');
-  } else if (err.code == 'unimplemented') {
+  } else if (err.code === 'unimplemented') {
     Logger.warn('PWA: Persistência do Firestore não é suportada neste navegador.');
   }
 });
@@ -50,7 +71,7 @@ window.addEventListener('unhandledrejection', async (event) => {
   ) {
     event.preventDefault();
     try {
-      await clearIndexedDbPersistence(firebaseApp);
+      await clearIndexedDbPersistence(db);
       window.location.reload();
     } catch (e) {
       Logger.error('Falha ao limpar cache do IndexedDB', e);
@@ -74,7 +95,7 @@ const App = {
     this.Auth.init();
     this.UI.init();
     this.Scanner.init();
-  },
+  }
 };
 window.App = App;
 window.Utils = Utils;
@@ -111,12 +132,16 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     deferredPrompt = e;
     // Mostra o botão
-    if (installBtn) installBtn.classList.remove('hidden');
+    if (installBtn) {
+      installBtn.classList.remove('hidden');
+    }
   });
 
   if (installBtn) {
     installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
+      if (!deferredPrompt) {
+        return;
+      }
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       window.Logger.info(`PWA Instalação: ${outcome}`);
@@ -126,7 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.addEventListener('appinstalled', () => {
-    if (installBtn) installBtn.classList.add('hidden');
+    if (installBtn) {
+      installBtn.classList.add('hidden');
+    }
     deferredPrompt = null;
     window.Logger.info('PWA instalado com sucesso!');
   });
@@ -135,13 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
   App.init();
 
   // Event listener para mudanças de breakpoint
-  window.addEventListener('breakpointChange', (e) => {
-    // console.log(`Breakpoint mudou: ${e.detail.old} → ${e.detail.new} (${e.detail.width}px)`);
+  window.addEventListener('breakpointChange', () => {
     App.UI.syncResponsiveLayout();
   });
 
   // Event listener para resize responsivo
-  window.addEventListener('responsiveResize', (e) => {
+  window.addEventListener('responsiveResize', () => {
     if (window.App?.UI?.activeTab === 'dashboard') {
       window.App.UI.renderDashboard();
     }

@@ -9,7 +9,7 @@ export const ResponsiveManager = {
     sm: 480,
     md: 768,
     lg: 1024,
-    xl: 1536,
+    xl: 1536
   },
 
   // Estado atual
@@ -22,7 +22,9 @@ export const ResponsiveManager = {
    * Inicializa o gerenciador responsivo
    */
   init: function () {
-    if (this._initialized) return;
+    if (this._initialized) {
+      return;
+    }
     this._initialized = true;
 
     this.detectDevice();
@@ -42,10 +44,15 @@ export const ResponsiveManager = {
     const w = window.innerWidth;
 
     let newBreakpoint = 'xs';
-    if (w >= this.breakpoints.xl) newBreakpoint = 'xl';
-    else if (w >= this.breakpoints.lg) newBreakpoint = 'lg';
-    else if (w >= this.breakpoints.md) newBreakpoint = 'md';
-    else if (w >= this.breakpoints.sm) newBreakpoint = 'sm';
+    if (w >= this.breakpoints.xl) {
+      newBreakpoint = 'xl';
+    } else if (w >= this.breakpoints.lg) {
+      newBreakpoint = 'lg';
+    } else if (w >= this.breakpoints.md) {
+      newBreakpoint = 'md';
+    } else if (w >= this.breakpoints.sm) {
+      newBreakpoint = 'sm';
+    }
 
     if (newBreakpoint !== this.currentBreakpoint) {
       const oldBreakpoint = this.currentBreakpoint;
@@ -54,7 +61,7 @@ export const ResponsiveManager = {
       // Disparar evento customizado
       window.dispatchEvent(
         new CustomEvent('breakpointChange', {
-          detail: { old: oldBreakpoint, new: newBreakpoint, width: w },
+          detail: { old: oldBreakpoint, new: newBreakpoint, width: w }
         })
       );
 
@@ -121,9 +128,8 @@ export const ResponsiveManager = {
       if (window.App?.UI) {
         window.App.UI.setMobileSidebarState(true);
       }
-    }
-    // Swipe da direita para esquerda (fechar sidebar)
-    else if (diffX > threshold && window.innerWidth < this.breakpoints.lg) {
+    } else if (diffX > threshold && window.innerWidth < this.breakpoints.lg) {
+      // Swipe da direita para esquerda (fechar sidebar)
       if (window.App?.UI) {
         window.App.UI.setMobileSidebarState(false);
       }
@@ -173,7 +179,7 @@ export const ResponsiveManager = {
         // Disparar evento de resize customizado
         window.dispatchEvent(
           new CustomEvent('responsiveResize', {
-            detail: { width: window.innerWidth, height: window.innerHeight },
+            detail: { width: window.innerWidth, height: window.innerHeight }
           })
         );
       }, 150); // Debounce de 150ms
@@ -192,7 +198,9 @@ export const ResponsiveManager = {
    * Manipula resize de layout
    */
   handleResize: function () {
-    if (!window.App?.UI) return;
+    if (!window.App?.UI) {
+      return;
+    }
 
     // Sincronizar sidebar com novo breakpoint
     window.App.UI.syncResponsiveLayout();
@@ -206,7 +214,9 @@ export const ResponsiveManager = {
         sidebar.classList.add('translate-x-0');
       }
       const overlay = document.getElementById('sidebar-overlay');
-      if (overlay) overlay.classList.add('hidden');
+      if (overlay) {
+        overlay.classList.add('hidden');
+      }
     }
   },
 
@@ -217,7 +227,7 @@ export const ResponsiveManager = {
     const observerOptions = {
       root: null,
       rootMargin: '50px',
-      threshold: 0.1,
+      threshold: 0.1
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -251,16 +261,14 @@ export const ResponsiveManager = {
         el.srcset = el.dataset.srcset;
         el.removeAttribute('data-srcset');
       }
-    }
-    // Se for iframe
-    else if (el.tagName === 'IFRAME') {
+    } else if (el.tagName === 'IFRAME') {
+      // Se for iframe
       if (el.dataset.src) {
         el.src = el.dataset.src;
         el.removeAttribute('data-src');
       }
-    }
-    // Se for div com background
-    else if (el.dataset.bg) {
+    } else if (el.dataset.bg) {
+      // Se for div com background
       el.style.backgroundImage = `url(${el.dataset.bg})`;
       el.removeAttribute('data-bg');
     }
@@ -283,8 +291,8 @@ export const ResponsiveManager = {
             new CustomEvent('contentResized', {
               detail: {
                 width: entry.contentRect.width,
-                height: entry.contentRect.height,
-              },
+                height: entry.contentRect.height
+              }
             })
           );
         });
@@ -393,7 +401,7 @@ export const ResponsiveManager = {
       width: window.innerWidth,
       height: window.innerHeight,
       breakpoint: this.currentBreakpoint,
-      isTouch: this.isTouch,
+      isTouch: this.isTouch
     };
   },
 
@@ -408,5 +416,5 @@ export const ResponsiveManager = {
     });
     this.observers = [];
     this._initialized = false;
-  },
+  }
 };

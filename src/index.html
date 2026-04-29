@@ -31,14 +31,11 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="./css/main.css" />
     <!-- External Libs -->
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"
-    ></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" crossorigin="anonymous"></script>
 
     <!-- Prevenir flash branco no carregamento do Dark Mode -->
     <script>
@@ -56,12 +53,52 @@
     </script>
   </head>
   <body
-    class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen min-h-dvh overflow-hidden"
+    class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300 overflow-hidden"
   >
+    <!-- SVG Sprite (Performance + Acessibilidade) -->
+    <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        </symbol>
+        <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </symbol>
+        <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" x2="12" y1="15" y2="3" />
+        </symbol>
+        <symbol id="icon-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" />
+        </symbol>
+        <symbol id="icon-scanner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" /><rect width="14" height="14" x="5" y="5" rx="2" />
+        </symbol>
+        <symbol id="icon-import" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" x2="12" y1="3" y2="15" />
+        </symbol>
+        <symbol id="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14" /><path d="M12 5v14" />
+        </symbol>
+        <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </symbol>
+        <symbol id="icon-inventory" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" /><path d="m3.3 7 8.7 5 8.7-5" /><path d="M12 22V12" />
+        </symbol>
+        <symbol id="icon-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M12 7v5l4 2" />
+        </symbol>
+      </defs>
+    </svg>
+
     <!-- Login Screen -->
     <div
       id="login-screen"
-      class="fixed inset-0 z-40 flex min-h-screen min-h-dvh overflow-y-auto bg-slate-50"
+      class="fixed inset-0 z-[60] flex overflow-y-auto bg-slate-50"
     >
       <!-- Left Side - Image Panel -->
       <div
@@ -241,7 +278,7 @@
               <button
                 type="submit"
                 id="btn-login"
-                class="w-full py-3.5 mt-6 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-lg shadow-brand-600/30 transition-all active:scale-95 flex items-center justify-center"
+                class="btn btn-primary w-full py-3.5 mt-6 font-bold shadow-lg shadow-brand-600/30 active:scale-95"
               >
                 <span id="login-text">Acessar Sistema</span>
               </button>
@@ -252,18 +289,18 @@
     </div>
 
     <!-- Main App -->
-    <div id="main-app" class="hidden flex min-h-screen min-h-dvh w-full overflow-hidden">
+    <div id="main-app" class="hidden">
       <!-- Sidebar Overlay (Mobile) -->
       <div
         id="sidebar-overlay"
-        class="fixed inset-0 bg-black/50 z-20 hidden lg:hidden"
+        class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"
         onclick="App.UI.toggleSidebar()"
       ></div>
 
       <!-- Sidebar -->
       <aside
         id="main-sidebar"
-        class="w-16 sm:w-20 md:w-72 lg:w-72 bg-slate-900 text-slate-300 flex flex-col transition-all duration-300 z-30 shrink-0 min-h-screen min-h-dvh border-r border-slate-800 fixed inset-y-0 left-0 lg:relative -translate-x-full lg:translate-x-0 shadow-2xl lg:shadow-none"
+        class="w-16 sm:w-20 md:w-72 lg:w-72 bg-slate-900 text-slate-300 flex flex-col transition-all duration-300 z-50 border-r border-slate-800 fixed inset-y-0 left-0 lg:relative -translate-x-full lg:translate-x-0 shadow-2xl lg:shadow-none"
       >
         <div
           class="h-20 flex items-center justify-center md:justify-start px-0 md:px-6 border-b border-slate-800 shrink-0"
@@ -302,69 +339,29 @@
           </p>
           <button
             id="nav-dashboard"
+            type="button"
             class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ease-in-out hover:bg-slate-800/50 hover:text-white hover:scale-[1.02] justify-center md:justify-start"
             data-tab="dashboard"
           >
-            <svg
-              class="w-5 h-5 shrink-0"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect width="7" height="9" x="3" y="3" rx="1" />
-              <rect width="7" height="5" x="14" y="3" rx="1" />
-              <rect width="7" height="9" x="14" y="12" rx="1" />
-              <rect width="7" height="5" x="3" y="16" rx="1" />
-            </svg>
+            <svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#icon-dashboard"></use></svg>
             <span class="hidden md:block font-bold text-sm">Painel</span>
           </button>
           <button
             id="nav-scanner"
+            type="button"
             class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ease-in-out hover:bg-slate-800/50 hover:text-white hover:scale-[1.02] justify-center md:justify-start"
             data-tab="scanner"
           >
-            <svg
-              class="w-5 h-5 shrink-0"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M3 7V5a2 2 0 0 1 2-2h2" />
-              <path d="M17 3h2a2 2 0 0 1 2 2v2" />
-              <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
-              <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
-              <rect width="14" height="14" x="5" y="5" rx="2" />
-            </svg>
+            <svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#icon-scanner"></use></svg>
             <span class="hidden md:block font-bold text-sm">Leitor / Scanner</span>
           </button>
           <button
             id="nav-collaborators"
+            type="button"
             class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ease-in-out hover:bg-slate-800/50 hover:text-white hover:scale-[1.02] justify-center md:justify-start"
             data-tab="collaborators"
           >
-            <svg
-              class="w-5 h-5 shrink-0"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
+            <svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#icon-users"></use></svg>
             <span class="hidden md:block font-bold text-sm">Colaboradores</span>
           </button>
 
@@ -377,68 +374,29 @@
 
           <button
             id="nav-management"
+            type="button"
             class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ease-in-out hover:bg-slate-800/50 hover:text-white hover:scale-[1.02] justify-center md:justify-start"
             data-tab="management"
           >
-            <svg
-              class="w-5 h-5 shrink-0"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
-              />
-              <path d="m3.3 7 8.7 5 8.7-5" />
-              <path d="M12 22V12" />
-            </svg>
+            <svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#icon-inventory"></use></svg>
             <span class="hidden md:block font-bold text-sm">Inventário</span>
           </button>
           <button
             id="nav-users"
+            type="button"
             class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ease-in-out hover:bg-slate-800/50 hover:text-white hover:scale-[1.02] justify-center md:justify-start"
             data-tab="users"
           >
-            <svg
-              class="w-5 h-5 shrink-0"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
-              />
-              <path d="m9 12 2 2 4-4" />
-            </svg>
+            <svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#icon-users"></use></svg>
             <span class="hidden md:block font-bold text-sm">Controle de Acesso</span>
           </button>
           <button
             id="nav-history"
+            type="button"
             class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ease-in-out hover:bg-slate-800/50 hover:text-white hover:scale-[1.02] justify-center md:justify-start"
             data-tab="history"
           >
-            <svg
-              class="w-5 h-5 shrink-0"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-              <path d="M3 3v5h5" />
-              <path d="M12 7v5l4 2" />
-            </svg>
+            <svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#icon-history"></use></svg>
             <span class="hidden md:block font-bold text-sm">Auditoria</span>
           </button>
         </nav>
@@ -446,30 +404,19 @@
         <div class="px-3 pb-4 mt-auto">
           <button
             id="btn-install-pwa"
-            class="hidden w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-sky-400 hover:bg-slate-800/50 hover:text-sky-300 transition-all duration-200 justify-start mb-2"
+            type="button"
+            class="hidden w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-sky-400 hover:bg-slate-800/50 hover:text-sky-300 transition-all duration-200 mb-2"
             title="Instalar o Sistema no Dispositivo"
           >
-            <svg
-              class="w-5 h-5 shrink-0"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" x2="12" y1="15" y2="3" />
-            </svg>
+            <svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#icon-download"></use></svg>
             <span class="hidden md:inline sidebar-text whitespace-nowrap">Instalar App</span>
           </button>
 
           <button
             id="btn-logout-sidebar"
+            type="button"
             onclick="App.Auth.logout()"
-            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-rose-400 hover:bg-slate-800/50 hover:text-rose-300 transition-all duration-200 justify-start"
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-rose-400 hover:bg-slate-800/50 hover:text-rose-300 transition-all duration-200"
             title="Sair do Sistema"
           >
             <svg
@@ -493,13 +440,14 @@
 
       <main
         id="main-content-scroll"
-        class="flex-1 flex flex-col min-w-0 overflow-y-auto overflow-x-hidden bg-slate-50 dark:bg-slate-950 relative w-full max-w-full"
+        class="bg-slate-50 dark:bg-slate-950 relative max-w-full"
       >
         <header
-          class="bg-white/80 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 h-16 flex items-center justify-between px-4 xl:px-8 flex-shrink-0 z-30 sticky top-0"
+          class="bg-white/80 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 h-16 flex items-center justify-between px-4 xl:px-8 z-30"
         >
           <div class="flex items-center gap-4">
             <button
+              type="button"
               onclick="App.UI.toggleSidebar()"
               class="p-2 -ml-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors xl:hidden"
             >
@@ -519,6 +467,7 @@
               </svg>
             </button>
             <button
+              type="button"
               onclick="App.UI.toggleSidebar()"
               class="hidden xl:block p-2 -ml-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none"
               title="Recolher/Expandir Menu Lateral"
@@ -585,6 +534,7 @@
             </div>
             <div class="relative" id="user-menu-container">
               <button
+                type="button"
                 onclick="App.UI.toggleUserMenu(event)"
                 class="flex items-center gap-3 p-1 pr-3 rounded-full border border-slate-200/60 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-all bg-white dark:bg-slate-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20"
               >
@@ -642,6 +592,7 @@
                   <div id="admin-tools">
                     <button
                       id="btn-user-mgmt"
+                      type="button"
                       class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors"
                       onclick="App.UI.switchTab('users')"
                     >
@@ -706,6 +657,7 @@
                     </label>
                     <button
                       id="btn-reset-data"
+                      type="button"
                       class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"
                       onclick="App.Data.resetAllData()"
                     >
@@ -731,6 +683,7 @@
                     </button>
                     <button
                       id="btn-export-json"
+                      type="button"
                       class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-xl transition-colors"
                       onclick="App.Data.exportJSON()"
                     >
@@ -782,6 +735,7 @@
                     </label>
                     <button
                       id="btn-metrics-report"
+                      type="button"
                       class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-900/20 rounded-xl transition-colors"
                       onclick="App.UI.openMetricsModal()"
                     >
@@ -807,6 +761,7 @@
                   </div>
                   <button
                     id="btn-profile-modal"
+                    type="button"
                     class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors"
                     onclick="App.Auth.openProfileModal()"
                   >
@@ -829,6 +784,7 @@
                   </button>
                   <button
                     id="btn-password-modal"
+                    type="button"
                     onclick="App.Auth.openPasswordModal()"
                     class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors"
                   >
@@ -851,6 +807,7 @@
                   </button>
                   <button
                     id="btn-dark-mode"
+                    type="button"
                     onclick="App.UI.toggleDarkMode()"
                     class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-colors"
                   >
@@ -904,31 +861,19 @@
         </header>
 
         <div
-          class="main-content-wrapper p-3 sm:p-4 lg:p-8 w-full space-y-3 md:space-y-6 lg:space-y-8"
+          class="main-content-wrapper p-3 sm:p-4 lg:p-8 space-y-3 md:space-y-6 lg:space-y-8"
         >
           <!-- Dashboard -->
-          <div id="tab-dashboard" class="tab-content space-y-3 md:space-y-6">
+          <section id="tab-dashboard" aria-labelledby="topbar-title" class="tab-content space-y-3 md:space-y-6">
             <div class="panel-card panel-content">
               <div class="flex flex-wrap justify-end gap-2 md:gap-3 items-center">
                 <!-- Exportar -->
                 <button
+                  type="button"
                   onclick="App.Data.exportExcel()"
                   class="btn px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md shadow-emerald-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap"
                 >
-                  <svg
-                    class="w-4 h-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" x2="12" y1="15" y2="3" />
-                  </svg>
+                  <svg class="w-4 h-4" aria-hidden="true"><use href="#icon-download"></use></svg>
                   <span>Exportar</span>
                 </button>
                 <div
@@ -1274,7 +1219,7 @@
                 </h4>
                 <div class="flex flex-col sm:flex-row items-center gap-4 flex-1 justify-center">
                   <div
-                    class="relative w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] flex items-center justify-center shrink-0"
+                    class="relative w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] shrink-0"
                   >
                     <canvas id="categoryChart"></canvas>
                   </div>
@@ -1317,6 +1262,7 @@
                     Timeline Recente
                   </h4>
                   <button
+                    type="button"
                     onclick="App.UI.switchTab('history')"
                     class="text-[10px] font-bold text-brand-600 hover:text-brand-700 uppercase tracking-wider"
                   >
@@ -1324,90 +1270,8 @@
                   </button>
                 </div>
                 <div class="flex-1 overflow-y-auto space-y-3 pr-1" id="dash-mini-timeline">
-                  <!-- Mock entries -->
-                  <div class="flex gap-3 items-start animate-fade-in">
-                    <div
-                      class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0"
-                    >
-                      <svg
-                        class="w-4 h-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path d="M9 11l3 3L22 4" />
-                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                      </svg>
-                    </div>
-                    <div class="min-w-0">
-                      <p class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
-                        Devolução
-                        <span class="text-emerald-600 dark:text-emerald-400">Concluída</span>
-                      </p>
-                      <p class="text-[10px] text-slate-500 truncate">
-                        Parafusadeira Bosch • Hoje, 14:30
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    class="flex gap-3 items-start animate-fade-in"
-                    style="animation-delay: 100ms"
-                  >
-                    <div
-                      class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0"
-                    >
-                      <svg
-                        class="w-4 h-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path d="M17 14H3l4 4" />
-                        <path d="M7 10h14l-4-4" />
-                      </svg>
-                    </div>
-                    <div class="min-w-0">
-                      <p class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
-                        Empréstimo
-                        <span class="text-amber-600 dark:text-amber-400">Registrado</span>
-                      </p>
-                      <p class="text-[10px] text-slate-500 truncate">
-                        Furadeira Impacto • Hoje, 09:15
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    class="flex gap-3 items-start animate-fade-in"
-                    style="animation-delay: 200ms"
-                  >
-                    <div
-                      class="w-8 h-8 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0"
-                    >
-                      <svg
-                        class="w-4 h-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-                        />
-                      </svg>
-                    </div>
-                    <div class="min-w-0">
-                      <p class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">
-                        Alerta de <span class="text-rose-600 dark:text-rose-400">Manutenção</span>
-                      </p>
-                      <p class="text-[10px] text-slate-500 truncate">
-                        Serra Tico-Tico • Ontem, 16:40
-                      </p>
-                    </div>
+                  <div class="text-center py-4 text-slate-400 text-xs font-semibold">
+                    Sem movimentações recentes
                   </div>
                 </div>
               </div>
@@ -1420,6 +1284,7 @@
                 <!-- Quick Filter Buttons -->
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2" id="quick-filters">
                   <button
+                    type="button"
                     onclick="App.UI.setQuickFilter('available')"
                     class="quick-filter-btn w-full px-2 sm:px-3 py-2.5 rounded-xl bg-emerald-100 text-emerald-700 text-[11px] sm:text-xs font-bold border border-emerald-200 flex flex-wrap items-center justify-center gap-1 text-center"
                     data-filter="available"
@@ -1441,6 +1306,7 @@
                   <span class="font-black" id="filter-count-available">0</span>
                 </button>
                 <button
+                  type="button"
                   onclick="App.UI.setQuickFilter('borrowed')"
                   class="quick-filter-btn w-full px-2 sm:px-3 py-2.5 rounded-xl bg-amber-100 text-amber-700 text-[11px] sm:text-xs font-bold border border-amber-200 flex flex-wrap items-center justify-center gap-1 text-center"
                   data-filter="borrowed"
@@ -1464,6 +1330,7 @@
                   <span class="font-black" id="filter-count-borrowed">0</span>
                 </button>
                 <button
+                  type="button"
                   onclick="App.UI.setQuickFilter('maintenance')"
                   class="quick-filter-btn w-full px-2 sm:px-3 py-2.5 rounded-xl bg-rose-100 text-rose-700 text-[11px] sm:text-xs font-bold border border-rose-200 flex flex-wrap items-center justify-center gap-1 text-center"
                   data-filter="maintenance"
@@ -1486,6 +1353,7 @@
                   <span class="font-black" id="filter-count-maintenance">0</span>
                 </button>
                 <button
+                  type="button"
                   onclick="App.UI.setQuickFilter('late')"
                   class="quick-filter-btn w-full px-2 sm:px-3 py-2.5 rounded-xl bg-rose-100 text-rose-700 text-[11px] sm:text-xs font-bold border border-rose-200 flex flex-wrap items-center justify-center gap-1 text-center"
                   data-filter="late"
@@ -1507,6 +1375,7 @@
                   <span class="font-black" id="filter-count-late-dash">0</span>
                 </button>
                 <button
+                  type="button"
                   onclick="App.UI.setQuickFilter('maintenance-due')"
                   class="quick-filter-btn w-full px-2 sm:px-3 py-2.5 rounded-xl bg-orange-100 text-orange-700 text-[11px] sm:text-xs font-bold border border-orange-200 flex flex-wrap items-center justify-center gap-1 text-center col-span-2 sm:col-span-2 lg:col-span-1"
                   data-filter="maintenance-due"
@@ -1537,18 +1406,8 @@
               >
                 <div class="relative flex-1 w-full">
                   <svg
-                    class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.3-4.3" />
-                  </svg>
+                    class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" aria-hidden="true"
+                  ><use href="#icon-search"></use></svg>
                   <input
                     id="dash-search"
                     type="text"
@@ -1578,6 +1437,7 @@
                   <option value="category">Categoria</option>
                 </select>
                 <button
+                  type="button"
                   onclick="
                     document.getElementById('dash-search').value = '';
                     document.getElementById('dash-filter').value = 'all';
@@ -1603,7 +1463,7 @@
               </div>
 
               <div class="flex items-center justify-between text-xs text-slate-500 px-1">
-                <span id="result-count" class="font-medium">Carregando...</span>
+                <span id="result-count" class="font-medium" aria-live="polite">Carregando...</span>
               </div>
 
               <div
@@ -1612,15 +1472,15 @@
               ></div>
               <button
                 id="dash-load-more"
+                type="button"
                 onclick="App.Data.loadMoreDash()"
                 class="btn btn-secondary w-full py-2.5 md:py-3 text-sm md:text-base"
               >
                 Carregar Mais
               </button>
             </div>
-          </div>
-      </div>
-          <div id="tab-scanner" class="tab-content hidden">
+          </section>
+          <section id="tab-scanner" aria-labelledby="topbar-title" class="tab-content hidden">
             <div class="max-w-4xl mx-auto">
               <div
                 class="panel-card overflow-hidden shadow-lg"
@@ -1632,6 +1492,7 @@
                   <div class="flex flex-wrap gap-2 w-full sm:w-auto items-center">
                     <button
                       id="btn-mode-usb"
+                      type="button"
                       onclick="App.Scanner.setMode('usb')"
                       class="btn btn-primary w-full sm:w-auto px-3 sm:px-4 py-2.5 text-sm min-h-11 hover:scale-105 active:scale-95"
                     >
@@ -1654,6 +1515,7 @@
                     </button>
                     <button
                       id="btn-mode-cam"
+                      type="button"
                       onclick="App.Scanner.setMode('cam')"
                       class="btn btn-secondary w-full sm:w-auto px-3 sm:px-4 py-2.5 text-sm min-h-11 hover:scale-105 active:scale-95"
                     >
@@ -1686,7 +1548,7 @@
                       id="scanner-status-indicator"
                     >
                       <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                      <span id="scanner-status-text" class="text-slate-300 leading-relaxed">
+                      <span id="scanner-status-text" class="text-slate-300 leading-relaxed" aria-live="polite">
                         Aguardando leitura via USB</span
                       >
                     </div>
@@ -1731,11 +1593,12 @@
                   </div>
                   <div
                     id="mode-cam-container"
-                    class="hidden-tab w-full absolute inset-0 bg-black z-10 flex flex-col"
+                    class="hidden-tab absolute inset-0 bg-black z-10 flex flex-col"
                   >
-                    <div id="reader" class="flex-1 w-full min-h-[300px] sm:min-h-[400px]"></div>
+                    <div id="reader" class="flex-1 overflow-hidden"></div>
                     <button
                       id="btn-toggle-torch"
+                      type="button"
                       onclick="App.Scanner.toggleTorch()"
                       class="absolute top-4 right-16 z-20 p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-full transition-colors"
                       title="Ligar/Desligar Lanterna"
@@ -1759,6 +1622,7 @@
                       </svg>
                     </button>
                     <button
+                      type="button"
                       onclick="App.Scanner.setMode('usb')"
                       class="absolute top-4 right-4 z-20 p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-full"
                     >
@@ -1819,6 +1683,7 @@
                         class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-emerald-200 dark:border-emerald-800 rounded-xl text-center font-bold mb-4 outline-none focus:ring-2 focus:ring-emerald-500"
                       />
                       <button
+                        type="button"
                         onclick="App.Scanner.processCheckout()"
                         class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 transition-all active:scale-95"
                       >
@@ -1838,12 +1703,14 @@
                       ></p>
                       <div class="grid grid-cols-2 gap-2 sm:gap-3">
                         <button
+                          type="button"
                           onclick="App.Scanner.reset()"
                           class="w-full py-3 bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 font-bold rounded-xl hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors"
                         >
                           Cancelar
                         </button>
                         <button
+                          type="button"
                           onclick="App.Scanner.processReturn()"
                           class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg shadow-amber-600/30 transition-all active:scale-95"
                         >
@@ -1883,6 +1750,7 @@
                       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         <button
                           id="btn-action-loan"
+                          type="button"
                           onclick="App.Scanner.quickAction('loan')"
                           class="w-full px-2 sm:px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold text-[13px] sm:text-sm transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
                         >
@@ -1901,6 +1769,7 @@
                         </button>
                         <button
                           id="btn-action-return"
+                          type="button"
                           onclick="App.Scanner.quickAction('return')"
                           class="w-full px-2 sm:px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-[13px] sm:text-sm transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
                         >
@@ -1919,6 +1788,7 @@
                           Devolver
                         </button>
                         <button
+                          type="button"
                           onclick="App.Scanner.quickAction('details')"
                           class="w-full col-span-2 sm:col-span-1 px-2 sm:px-4 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-bold text-[13px] sm:text-sm transition-all hover:scale-105 active:scale-95 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center justify-center gap-1.5"
                         >
@@ -1982,17 +1852,7 @@
                     <div
                       class="w-12 h-12 bg-brand-50 dark:bg-brand-900/20 rounded-xl flex items-center justify-center text-brand-500 shrink-0"
                     >
-                      <svg
-                        class="w-6 h-6"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path d="M5 12h14" />
-                        <path d="M12 5v14" />
-                      </svg>
+                      <svg class="w-6 h-6" aria-hidden="true"><use href="#icon-plus"></use></svg>
                     </div>
                     <div>
                       <p
@@ -2082,10 +1942,8 @@
                 />
               </div>
             </div>
-          </div>
-
-          <!-- Management -->
-          <div id="tab-management" class="tab-content hidden space-y-5 md:space-y-6">
+          </section>
+          <section id="tab-management" aria-labelledby="topbar-title" class="tab-content hidden space-y-5 md:space-y-6">
             <div class="panel-card panel-content">
               <!-- Header com contadores -->
               <div class="grid gap-4 lg:grid-cols-[minmax(280px,1fr)_auto] items-start">
@@ -2156,69 +2014,33 @@
                 </div>
               </div>
               <div class="space-y-3">
-                <div class="flex flex-wrap justify-end gap-2 items-center">
+                <div class="flex flex-nowrap justify-start lg:justify-end gap-2 items-center overflow-x-auto pb-1 w-full lg:w-auto shrink-0 max-w-full">
                   <button
+                    type="button"
                     onclick="App.CRUDTools.quickExport()"
-                    class="btn px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md shadow-emerald-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap"
+                    class="btn px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md shadow-emerald-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap shrink-0"
                     title="Exportar lista completa"
                   >
-                    <svg
-                      class="w-4 h-4 shrink-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" x2="12" y1="15" y2="3" />
-                    </svg>
+                    <svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#icon-download"></use></svg>
                     Exportar
                   </button>
                   <button
+                    type="button"
                     onclick="document.getElementById('crud-import-input-tool').click()"
-                    class="btn px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold shadow-sm transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap"
+                    class="btn px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold shadow-sm transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap shrink-0"
                   >
-                    <svg
-                      class="w-4 h-4 shrink-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="17 8 12 3 7 8" />
-                      <line x1="12" x2="12" y1="3" y2="15" />
-                    </svg>
+                    <svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#icon-import"></use></svg>
                     Importar
                   </button>
                   <button
+                    type="button"
                     onclick="App.CRUDTools.openModal()"
-                    class="btn px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold shadow-md shadow-brand-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap"
+                    class="btn px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold shadow-md shadow-brand-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap shrink-0"
                   >
-                    <svg
-                      class="w-4 h-4 shrink-0"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M5 12h14" />
-                      <path d="M12 5v14" />
-                    </svg>
+                    <svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#icon-plus"></use></svg>
                     Nova
                   </button>
                 </div>
-
                 <input
                   type="file"
                   id="crud-import-input-tool"
@@ -2232,6 +2054,7 @@
             <!-- Filtros Rápidos por Status -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="inventory-quick-filters">
               <button
+                type="button"
                 onclick="App.CRUDTools.setQuickFilter('all')"
                 class="inv-filter-btn inline-flex items-center justify-center gap-1.5 whitespace-nowrap px-3 py-2.5 rounded-xl bg-brand-100 text-brand-700 text-[11px] sm:text-xs font-bold border border-brand-200 transition-all hover:scale-105"
                 data-filter="all"
@@ -2257,6 +2080,7 @@
                 Todos
               </button>
               <button
+                type="button"
                 onclick="App.CRUDTools.setQuickFilter('available')"
                 class="inv-filter-btn inline-flex items-center justify-center gap-1.5 whitespace-nowrap px-3 py-2.5 rounded-xl bg-emerald-100 text-emerald-700 text-[11px] sm:text-xs font-bold border border-emerald-200 transition-all hover:scale-105"
                 data-filter="available"
@@ -2280,6 +2104,7 @@
                 <span class="font-black" id="filter-inv-available">0</span>
               </button>
               <button
+                type="button"
                 onclick="App.CRUDTools.setQuickFilter('borrowed')"
                 class="inv-filter-btn inline-flex items-center justify-center gap-1.5 whitespace-nowrap px-3 py-2.5 rounded-xl bg-amber-100 text-amber-700 text-[11px] sm:text-xs font-bold border border-amber-200 transition-all hover:scale-105"
                 data-filter="borrowed"
@@ -2305,6 +2130,7 @@
                 <span class="font-black" id="filter-inv-borrowed">0</span>
               </button>
               <button
+                type="button"
                 onclick="App.CRUDTools.setQuickFilter('maintenance')"
                 class="inv-filter-btn inline-flex items-center justify-center gap-1.5 whitespace-nowrap px-3 py-2.5 rounded-xl bg-rose-100 text-rose-700 text-[11px] sm:text-xs font-bold border border-rose-200 transition-all hover:scale-105"
                 data-filter="maintenance"
@@ -2329,6 +2155,7 @@
                 <span class="font-black" id="filter-inv-maintenance">0</span>
               </button>
               <button
+                type="button"
                 onclick="App.CRUDTools.setQuickFilter('late')"
                 class="inv-filter-btn inline-flex items-center justify-center gap-1.5 whitespace-nowrap px-3 py-2.5 rounded-xl bg-rose-100 text-rose-700 text-[11px] sm:text-xs font-bold border border-rose-200 transition-all hover:scale-105"
                 data-filter="late"
@@ -2338,6 +2165,7 @@
                 <span class="font-black" id="filter-count-late">0</span>
               </button>
               <button
+                type="button"
                 onclick="App.CRUDTools.setQuickFilter('maintenance-due')"
                 class="inv-filter-btn inline-flex items-center justify-center gap-1.5 whitespace-nowrap px-3 py-2.5 rounded-xl bg-orange-100 text-orange-700 text-[11px] sm:text-xs font-bold border border-orange-200 transition-all hover:scale-105"
                 data-filter="maintenance-due"
@@ -2354,18 +2182,8 @@
             >
               <div class="relative flex-1 w-full">
                 <svg
-                  class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
+                      class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" aria-hidden="true"
+                    ><use href="#icon-search"></use></svg>
                 <input
                   id="tools-search"
                   type="text"
@@ -2395,7 +2213,7 @@
             </div>
 
             <!-- Contador de resultados -->
-            <p class="text-xs text-slate-500" id="inventory-result-count">
+            <p class="text-xs text-slate-500" id="inventory-result-count" aria-live="polite">
               Mostrando 0 de 0 ferramentas
             </p>
 
@@ -2406,20 +2224,19 @@
             ></div>
             <button
               id="crud-load-more"
+              type="button"
               onclick="App.Data.loadMoreCrud()"
               class="w-full py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
               Carregar Mais
             </button>
           </div>
-        </div>
-
-          <!-- Users -->
-          <div id="tab-users" class="tab-content hidden space-y-6">
+        </section>
+          <section id="tab-users" aria-labelledby="topbar-title" class="tab-content hidden space-y-6">
             <div class="panel-card panel-content">
               <!-- Header com contadores e ações -->
-              <div class="grid gap-4 md:grid-cols-[minmax(240px,1fr)_auto] items-start">
-              <div>
+              <div class="grid gap-4 lg:grid-cols-[minmax(240px,1fr)_auto] items-start">
+              <div class="min-w-0">
                 <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">
                   Controle de Acesso e Usuários
                 </h3>
@@ -2427,75 +2244,41 @@
                   Gerencie os colaboradores do sistema, atribua permissões e controle acessos.
                 </p>
               </div>
-              <div class="flex flex-wrap justify-end gap-2 items-center">
-
+              <div class="min-w-0 space-y-3">
+                <div class="flex flex-nowrap justify-start lg:justify-end gap-2 items-center overflow-x-auto pb-1 w-full lg:w-auto">
                 <button
+                  type="button"
                   onclick="App.CRUDUsers.exportExcel()"
-                  class="btn px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md shadow-emerald-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap"
+                  class="btn px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md shadow-emerald-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap shrink-0"
                 >
-                  <svg
-                    class="w-4 h-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" x2="12" y1="15" y2="3" />
-                  </svg>
+                  <svg class="w-4 h-4" aria-hidden="true"><use href="#icon-download"></use></svg>
                   Exportar
                 </button>
                 <button
+                  type="button"
                   onclick="document.getElementById('crud-import-input-user').click()"
-                  class="btn px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold shadow-sm transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap"
+                  class="btn px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold shadow-sm transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap shrink-0"
                 >
-                    <svg
-                      class="w-4 h-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="17 8 12 3 7 8" />
-                      <line x1="12" x2="12" y1="3" y2="15" />
-                    </svg>
+                    <svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#icon-import"></use></svg>
                     Importar
                   </button>
-                  <input
-                    type="file"
-                    id="crud-import-input-user"
-                    class="hidden"
-                    accept=".xlsx, .xls"
-                    onchange="App.CRUDUsers.importFile(event)"
-                  />
                   <button
+                    type="button"
                     onclick="App.CRUDUsers.openModal()"
-                  class="btn px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold shadow-md shadow-brand-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap"
+                  class="btn px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold shadow-md shadow-brand-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap shrink-0"
                   >
-                    <svg
-                      class="w-4 h-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M5 12h14" />
-                      <path d="M12 5v14" />
-                    </svg>
+                    <svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#icon-plus"></use></svg>
                 Novo
                   </button>
                 </div>
+                <input
+                  type="file"
+                  id="crud-import-input-user"
+                  class="hidden"
+                  accept=".xlsx, .xls"
+                  onchange="App.CRUDUsers.importFile(event)"
+                />
+              </div>
               </div>
               <!-- Contadores de Usuários -->
               <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="users-counters">
@@ -2558,18 +2341,8 @@
             <div class="space-y-3">
               <div class="relative">
                 <svg
-                  class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
+                      class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" aria-hidden="true"
+                    ><use href="#icon-search"></use></svg>
                 <input
                   id="users-search"
                   type="text"
@@ -2581,6 +2354,7 @@
               <!-- Filtros por Nível de Acesso -->
               <div class="flex flex-wrap gap-2" id="users-filters">
                 <button
+                  type="button"
                   onclick="App.CRUDUsers.setAccessFilter('all')"
                   class="filter-btn active px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border"
                   data-filter="all"
@@ -2588,6 +2362,7 @@
                   Todos
                 </button>
                 <button
+                  type="button"
                   onclick="App.CRUDUsers.setAccessFilter('Administrador')"
                   class="filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-purple-300"
                   data-filter="Administrador"
@@ -2595,6 +2370,7 @@
                   Administradores
                 </button>
                 <button
+                  type="button"
                   onclick="App.CRUDUsers.setAccessFilter('Usuario Padrao')"
                   class="filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-300"
                   data-filter="Usuario Padrao"
@@ -2602,6 +2378,7 @@
                   Usuários Padrão
                 </button>
                 <button
+                  type="button"
                   onclick="App.CRUDUsers.setAccessFilter('Ativo')"
                   class="filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-emerald-300"
                   data-filter="Ativo"
@@ -2609,6 +2386,7 @@
                   Ativos
                 </button>
                 <button
+                  type="button"
                   onclick="App.CRUDUsers.setAccessFilter('Inativo')"
                   class="filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-rose-300"
                   data-filter="Inativo"
@@ -2625,6 +2403,7 @@
                   >Ordenar:</span
                 >
                 <button
+                  type="button"
                   onclick="App.CRUDUsers.setSort('name')"
                   class="sort-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-300"
                   data-sort="name"
@@ -2632,6 +2411,7 @@
                   Nome <span class="sort-indicator"></span>
                 </button>
                 <button
+                  type="button"
                   onclick="App.CRUDUsers.setSort('email')"
                   class="sort-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-300"
                   data-sort="email"
@@ -2639,6 +2419,7 @@
                   Email <span class="sort-indicator"></span>
                 </button>
                 <button
+                  type="button"
                   onclick="App.CRUDUsers.setSort('lastLogin')"
                   class="sort-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-300"
                   data-sort="lastLogin"
@@ -2646,6 +2427,7 @@
                   Último Login <span class="sort-indicator"></span>
                 </button>
                 <button
+                  type="button"
                   onclick="App.CRUDUsers.setSort('status')"
                   class="sort-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-300"
                   data-sort="status"
@@ -2659,14 +2441,12 @@
               id="user-management-body"
               class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
             ></div>
-          </div>
-
-          <!-- Collaborators -->
-          <div id="tab-collaborators" class="tab-content hidden space-y-6">
+          </section>
+          <section id="tab-collaborators" aria-labelledby="topbar-title" class="tab-content hidden space-y-6">
             <div class="panel-card panel-content">
               <!-- Header com contador -->
-              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
+              <div class="grid gap-4 lg:grid-cols-[minmax(240px,1fr)_auto] items-start">
+              <div class="min-w-0">
                 <h3 class="text-2xl font-extrabold text-slate-900 dark:text-white">
                   Colaboradores
                 </h3>
@@ -2676,80 +2456,48 @@
                 <!-- Contador total -->
                 <p class="text-sm text-slate-500 mt-2" id="collab-total-count">Carregando...</p>
               </div>
-              <div class="flex flex-wrap gap-2 items-center justify-end">
+              <div class="min-w-0 space-y-3">
+                <div class="flex flex-nowrap justify-start lg:justify-end gap-2 items-center overflow-x-auto pb-1 w-full lg:w-auto">
                 <!-- Exportar lista -->
                 <button
+                  type="button"
                   onclick="App.CRUDCollaborators.exportList()"
-                class="btn px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md shadow-emerald-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap"
+                  class="btn px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md shadow-emerald-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap shrink-0"
                 >
-                  <svg
-                    class="w-4 h-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" x2="12" y1="15" y2="3" />
-                  </svg>
+                  <svg class="w-4 h-4" aria-hidden="true"><use href="#icon-download"></use></svg>
                   Exportar
                 </button>
                 <button
+                  type="button"
                   onclick="document.getElementById('crud-import-input-collab').click()"
-                class="btn px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold shadow-sm transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap"
+                  class="btn px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold shadow-sm transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap shrink-0"
                 >
-                  <svg
-                    class="w-4 h-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" x2="12" y1="3" y2="15" />
-                  </svg>
+                  <svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#icon-import"></use></svg>
                   Importar
                 </button>
-                <input
-                  type="file"
-                  id="crud-import-input-collab"
-                  class="hidden"
-                  accept=".xlsx, .xls"
-                  onchange="App.CRUDCollaborators.importFile(event)"
-                />
                 <button
+                  type="button"
                   onclick="App.CRUDCollaborators.openModal()"
-                class="btn px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold shadow-md shadow-brand-600/20 transition-all active:scale-95 flex items-center gap-2 text-sm whitespace-nowrap"
+                  class="btn btn-primary px-4 py-2.5 font-bold active:scale-95 text-sm whitespace-nowrap shrink-0"
                 >
-                  <svg
-                    class="w-4 h-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
-                  </svg>
+                  <svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#icon-plus"></use></svg>
                 Novo
                 </button>
+              </div>
+              <input
+                type="file"
+                id="crud-import-input-collab"
+                class="hidden"
+                accept=".xlsx, .xls"
+                onchange="App.CRUDCollaborators.importFile(event)"
+              />
               </div>
             </div>
 
             <!-- Filtros Rápidos (Pendências) -->
             <div class="flex flex-wrap gap-2" id="collab-quick-filters">
               <button
+                type="button"
                 onclick="App.CRUDCollaborators.setPendingFilter('all')"
                 class="collab-filter-btn active px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border bg-brand-600 text-white border-brand-600"
                 data-filter="all"
@@ -2757,6 +2505,7 @@
                 Todos
               </button>
               <button
+                type="button"
                 onclick="App.CRUDCollaborators.setPendingFilter('pending')"
                 class="collab-filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-rose-300"
                 data-filter="pending"
@@ -2772,19 +2521,7 @@
               <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-2 md:gap-3">
                 <!-- Busca -->
                 <div class="col-span-2 sm:col-span-1 lg:col-span-2 relative">
-                  <svg
-                    class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.3-4.3" />
-                  </svg>
+                  <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" aria-hidden="true"><use href="#icon-search"></use></svg>
                   <input
                     id="collab-search"
                     type="text"
@@ -2823,7 +2560,7 @@
               <div
                 class="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 gap-2"
               >
-                <p class="text-xs text-slate-500" id="collab-result-count">
+                <p class="text-xs text-slate-500" id="collab-result-count" aria-live="polite">
                   Mostrando 0 de 0 colaboradores
                 </p>
                 <label
@@ -2850,19 +2587,18 @@
             <div class="flex flex-col items-center gap-4" id="collab-pagination">
               <button
                 id="collab-load-more"
+                type="button"
                 onclick="App.CRUDCollaborators.loadMore()"
                 class="w-full max-w-md py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all text-sm shadow-sm"
               >
                 Carregar Mais (30)
               </button>
-              <p class="text-xs text-slate-400" id="collab-pagination-info">
+              <p class="text-xs text-slate-400" id="collab-pagination-info" aria-live="polite">
                 Mostrando os primeiros 30 colaboradores
               </p>
             </div>
-          </div>
-
-          <!-- History -->
-          <div id="tab-history" class="tab-content hidden space-y-6">
+          </section>
+          <section id="tab-history" aria-labelledby="topbar-title" class="tab-content hidden space-y-6">
             <div class="panel-card panel-content">
               <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
@@ -2884,6 +2620,7 @@
                   <option value="30days">Este Mês</option>
                 </select>
                 <button
+                  type="button"
                   onclick="App.Data.cleanOldLogs()"
                   class="btn btn-secondary px-4 py-2 text-sm"
                 >
@@ -2916,13 +2653,14 @@
             <div id="history-load-more-container" class="hidden">
               <button
                 id="history-load-more"
+                type="button"
                 onclick="App.Data.loadMoreHistory()"
                 class="w-full py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
                 Carregar Mais
               </button>
             </div>
-          </div>
+          </section>
         </div>
       </main>
     </div>
@@ -2930,6 +2668,7 @@
     <!-- Back to Top Button -->
     <button
       id="back-to-top"
+      type="button"
       class="fixed bottom-6 md:bottom-8 right-6 md:right-8 z-50 w-12 h-12 p-0 m-0 aspect-square inline-flex items-center justify-center bg-brand-600 text-white rounded-full shadow-xl shadow-brand-600/30 transition-all duration-300 hover:bg-brand-700 active:scale-95 opacity-0 pointer-events-none"
       aria-label="Voltar ao topo"
     >
@@ -2940,13 +2679,10 @@
 
     <!-- Modals -->
     <!-- Tool Modal -->
-    <div
+    <dialog
       id="crud-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      class="p-0 bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden open:animate-fade-in backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-fade-in"
-      >
         <div
           class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between"
         >
@@ -2954,22 +2690,11 @@
             Nova Ferramenta
           </h3>
           <button
+            type="button"
             onclick="App.CRUDTools.closeModal()"
             class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
           >
-            <svg
-              class="w-5 h-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+                <svg class="w-5 h-5" aria-hidden="true"><use href="#icon-close"></use></svg>
           </button>
         </div>
         <div class="p-6 space-y-4">
@@ -3065,6 +2790,7 @@
           class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex gap-3"
         >
           <button
+            type="button"
             onclick="App.CRUDTools.closeModal()"
             class="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
           >
@@ -3072,23 +2798,20 @@
           </button>
           <button
             id="btn-save-tool"
+            type="button"
             onclick="App.CRUDTools.saveTool()"
             class="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md shadow-brand-600/20 transition-all active:scale-95"
           >
             Salvar
           </button>
         </div>
-      </div>
-    </div>
+    </dialog>
 
     <!-- User Modal -->
-    <div
+    <dialog
       id="crud-user-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      class="p-0 bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden open:animate-fade-in max-h-[calc(100vh-2rem)] overflow-y-auto backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-[calc(100vh-2rem)] overflow-y-auto"
-      >
         <div
           class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between"
         >
@@ -3096,22 +2819,11 @@
             Novo Usuário
           </h3>
           <button
+            type="button"
             onclick="App.CRUDUsers.closeModal()"
             class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
           >
-            <svg
-              class="w-5 h-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+            <svg class="w-5 h-5" aria-hidden="true"><use href="#icon-close"></use></svg>
           </button>
         </div>
         <div class="p-6 space-y-4">
@@ -3169,29 +2881,27 @@
           class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex gap-3"
         >
           <button
+            type="button"
             onclick="App.CRUDUsers.closeModal()"
             class="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
           >
             Cancelar
           </button>
           <button
+            type="button"
             onclick="App.CRUDUsers.saveUser()"
             class="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md shadow-brand-600/20 transition-all active:scale-95"
           >
             <span id="btn-save-user-text">Cadastrar</span>
           </button>
         </div>
-      </div>
-    </div>
+    </dialog>
 
     <!-- Collaborator Modal -->
-    <div
+    <dialog
       id="crud-collab-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      class="p-0 bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden open:animate-fade-in max-h-[calc(100vh-2rem)] overflow-y-auto backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-[calc(100vh-2rem)] overflow-y-auto"
-      >
         <div
           class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between"
         >
@@ -3199,22 +2909,11 @@
             Novo Colaborador
           </h3>
           <button
+            type="button"
             onclick="App.CRUDCollaborators.closeModal()"
             class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
           >
-            <svg
-              class="w-5 h-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+            <svg class="w-5 h-5" aria-hidden="true"><use href="#icon-close"></use></svg>
           </button>
         </div>
         <div class="p-6 space-y-4">
@@ -3305,6 +3004,7 @@
           class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex gap-3"
         >
           <button
+            type="button"
             onclick="App.CRUDCollaborators.closeModal()"
             class="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
           >
@@ -3312,23 +3012,20 @@
           </button>
           <button
             id="btn-save-collab"
+            type="button"
             onclick="App.CRUDCollaborators.saveCollaborator()"
             class="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md shadow-brand-600/20 transition-all active:scale-95"
           >
             Salvar
           </button>
         </div>
-      </div>
-    </div>
+    </dialog>
 
     <!-- History Collab Modal -->
-    <div
+    <dialog
       id="collab-history-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      class="p-0 bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden open:animate-fade-in max-h-[calc(100vh-2rem)] open:flex open:flex-col backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-[calc(100vh-2rem)] flex flex-col"
-      >
         <div
           class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0"
         >
@@ -3344,22 +3041,11 @@
             </p>
           </div>
           <button
+            type="button"
             onclick="App.CRUDCollaborators.closeHistoryModal()"
             class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
           >
-            <svg
-              class="w-6 h-6"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+                <svg class="w-6 h-6" aria-hidden="true"><use href="#icon-close"></use></svg>
           </button>
         </div>
         <div class="p-4 sm:p-6 overflow-y-auto flex-1 bg-slate-50 dark:bg-slate-950">
@@ -3371,23 +3057,20 @@
           class="p-4 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 text-right"
         >
           <button
+            type="button"
             onclick="App.CRUDCollaborators.closeHistoryModal()"
             class="px-6 py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
           >
             Fechar
           </button>
         </div>
-      </div>
-    </div>
+    </dialog>
 
     <!-- Logout Modal -->
-    <div
+    <dialog
       id="logout-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      class="p-6 bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden open:animate-fade-in text-center backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-fade-in text-center p-6"
-      >
         <div
           class="w-16 h-16 bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4"
         >
@@ -3412,51 +3095,37 @@
         </p>
         <div class="flex gap-3">
           <button
+            type="button"
             onclick="App.Auth.closeLogoutModal()"
             class="flex-1 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
           >
             Cancelar
           </button>
           <button
+            type="button"
             onclick="App.Auth.confirmLogout()"
             class="flex-1 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-md shadow-rose-600/20 transition-all active:scale-95"
           >
             Sair
           </button>
         </div>
-      </div>
-    </div>
+    </dialog>
 
     <!-- Password Modal -->
-    <div
+    <dialog
       id="password-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      class="p-0 bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden open:animate-fade-in max-h-[calc(100vh-2rem)] overflow-y-auto backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-[calc(100vh-2rem)] overflow-y-auto"
-      >
         <div
           class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center"
         >
           <h3 class="text-xl font-extrabold text-slate-900 dark:text-white">Alterar Senha</h3>
           <button
+            type="button"
             onclick="App.Auth.closePasswordModal()"
             class="text-slate-400 hover:text-slate-600 transition-colors"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+                <svg class="w-6 h-6" aria-hidden="true"><use href="#icon-close"></use></svg>
           </button>
         </div>
         <form
@@ -3607,17 +3276,13 @@
             </div>
           </div>
         </form>
-      </div>
-    </div>
+    </dialog>
 
     <!-- Profile Modal -->
-    <div
+    <dialog
       id="profile-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      class="p-0 bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden open:animate-fade-in max-h-[calc(100vh-2rem)] overflow-y-auto backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-[calc(100vh-2rem)] overflow-y-auto"
-      >
         <div class="bg-slate-900 p-6 text-center relative">
           <!-- Avatar estático -->
           <div
@@ -3647,22 +3312,11 @@
             Role
           </p>
           <button
+            type="button"
             onclick="App.Auth.closeProfileModal()"
             class="absolute top-4 right-4 text-slate-400 hover:text-white"
           >
-            <svg
-              class="w-5 h-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+                <svg class="w-5 h-5" aria-hidden="true"><use href="#icon-close"></use></svg>
           </button>
         </div>
         <div class="p-6 space-y-3">
@@ -3697,6 +3351,7 @@
                 >Sem e-mail</span
               >
               <button
+                type="button"
                 onclick="App.UI.copyToClipboard('profile-modal-email')"
                 class="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all"
                 title="Copiar email"
@@ -3773,6 +3428,7 @@
                 >Desconhecido</span
               >
               <button
+                type="button"
                 onclick="App.UI.copyToClipboard('profile-modal-ip')"
                 class="opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all"
                 title="Copiar IP"
@@ -3849,6 +3505,7 @@
         </div>
         <div class="p-6 border-t border-slate-100 dark:border-slate-800 space-y-3">
           <button
+            type="button"
             onclick="
               App.Auth.closeProfileModal();
               App.Auth.openPasswordModal();
@@ -3871,6 +3528,7 @@
             Alterar Senha
           </button>
           <button
+            type="button"
             onclick="
               App.Auth.closeProfileModal();
               App.Auth.logout();
@@ -3894,17 +3552,13 @@
             Sair do Sistema
           </button>
         </div>
-      </div>
-    </div>
+    </dialog>
 
     <!-- Forgot Password Modal -->
-    <div
+    <dialog
       id="forgot-password-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      class="p-0 bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden open:animate-fade-in max-h-[calc(100vh-2rem)] overflow-y-auto backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-[calc(100vh-2rem)] overflow-y-auto"
-      >
         <div class="p-8 text-center">
           <div
             class="w-16 h-16 bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 rounded-full flex items-center justify-center mx-auto mb-4"
@@ -3937,29 +3591,27 @@
           />
           <button
             id="btn-send-forgot"
+            type="button"
             onclick="App.Auth.sendForgotEmail()"
             class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md shadow-brand-600/20 transition-all active:scale-95"
           >
             Enviar link
           </button>
           <button
+            type="button"
             onclick="App.Auth.closeForgotModal()"
             class="mt-4 text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold"
           >
             Cancelar
           </button>
         </div>
-      </div>
-    </div>
+    </dialog>
 
     <!-- Tool History Modal -->
-    <div
+    <dialog
       id="tool-history-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      class="p-0 bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden open:animate-fade-in max-h-[calc(100vh-2rem)] open:flex open:flex-col backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-[calc(100vh-2rem)] flex flex-col"
-      >
         <div
           class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0"
         >
@@ -3975,22 +3627,11 @@
             </p>
           </div>
           <button
+            type="button"
             onclick="App.CRUDTools.closeHistoryModal()"
             class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
           >
-            <svg
-              class="w-6 h-6"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+                <svg class="w-6 h-6" aria-hidden="true"><use href="#icon-close"></use></svg>
           </button>
         </div>
         <div class="p-4 sm:p-6 overflow-y-auto flex-1 bg-slate-50 dark:bg-slate-950">
@@ -4002,23 +3643,20 @@
           class="p-4 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 text-right"
         >
           <button
+            type="button"
             onclick="App.CRUDTools.closeHistoryModal()"
             class="px-6 py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
           >
             Fechar
           </button>
         </div>
-      </div>
-    </div>
+    </dialog>
 
     <!-- Metrics Modal -->
-    <div
+    <dialog
       id="metrics-modal"
-      class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+      class="p-0 bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden open:animate-fade-in max-h-[calc(100vh-2rem)] open:flex open:flex-col backdrop:bg-slate-900/60 backdrop:backdrop-blur-sm"
     >
-      <div
-        class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-fade-in max-h-[calc(100vh-2rem)] flex flex-col"
-      >
         <div
           class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between shrink-0"
         >
@@ -4031,22 +3669,11 @@
             </p>
           </div>
           <button
+            type="button"
             onclick="App.UI.closeMetricsModal()"
             class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
           >
-            <svg
-              class="w-6 h-6"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+            <svg class="w-6 h-6" aria-hidden="true"><use href="#icon-close"></use></svg>
           </button>
         </div>
         <div
@@ -4059,19 +3686,19 @@
           class="p-4 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 text-right"
         >
           <button
+            type="button"
             onclick="App.UI.closeMetricsModal()"
             class="px-6 py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
           >
             Fechar
           </button>
         </div>
-      </div>
-    </div>
+    </dialog>
 
     <!-- Image Lightbox -->
-    <div
+    <dialog
       id="image-lightbox"
-      class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/90 backdrop-blur-sm p-4"
+      class="p-4 bg-transparent backdrop:bg-black/90 backdrop:backdrop-blur-sm"
       onclick="App.UI.closeImagePreview()"
     >
       <img
@@ -4085,7 +3712,7 @@
         class="absolute bottom-8 left-0 right-0 text-center text-white font-bold text-lg drop-shadow-lg"
         onclick="event.stopPropagation()"
       ></p>
-    </div>
+    </dialog>
 
     <!-- App Logic -->
     <script type="module" src="./js/app.js"></script>

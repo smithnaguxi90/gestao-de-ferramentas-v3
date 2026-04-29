@@ -1,12 +1,11 @@
 import {
   doc,
-  setDoc,
   updateDoc,
   deleteDoc,
   addDoc,
-  collection,
+  collection
 } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
-import { db, auth, DB_BASE_PATH, COLLECTIONS } from '../app.js';
+import { db, auth, DB_BASE_PATH, COLLECTIONS, CONFIG } from '../app.js';
 
 export const AppCRUDCollaborators = {
   collabLimit: 30,
@@ -59,7 +58,9 @@ export const AppCRUDCollaborators = {
   },
 
   getPendingTools: function (collabName) {
-    if (!collabName) return [];
+    if (!collabName) {
+      return [];
+    }
     return window.App.Data.tools.filter(
       (t) => t.status === 'borrowed' && t.currentUser === collabName
     );
@@ -67,7 +68,9 @@ export const AppCRUDCollaborators = {
 
   render: function () {
     const list = window.App.UI.domCache?.collabList || document.getElementById('collab-list');
-    if (!list) return;
+    if (!list) {
+      return;
+    }
     if (!window.App.Data.collaboratorsLoaded) {
       list.innerHTML = Array(6).fill(window.Utils.getSkeletonHTML()).join('');
       return;
@@ -177,7 +180,9 @@ export const AppCRUDCollaborators = {
     const groups = {};
     filtered.forEach((c) => {
       const role = c.role || 'Sem Cargo';
-      if (!groups[role]) groups[role] = [];
+      if (!groups[role]) {
+        groups[role] = [];
+      }
       groups[role].push(c);
     });
 
@@ -188,7 +193,9 @@ export const AppCRUDCollaborators = {
     sortedRoles.forEach((role) => {
       const members = groups[role];
       const shown = Math.min(members.length, this.collabLimit - totalShown);
-      if (shown === 0 || totalShown >= this.collabLimit) return;
+      if (shown === 0 || totalShown >= this.collabLimit) {
+        return;
+      }
 
       totalShown += shown;
 
@@ -253,7 +260,7 @@ export const AppCRUDCollaborators = {
       (u.status || 'active') === 'active' ? 'border-l-emerald-500' : 'border-l-rose-500';
     const imgHtml = u.imageUrl
       ? `<img src="${window.Utils.escapeHTML(u.imageUrl)}" onclick="App.UI.showImagePreview(this.src, '${window.Utils.escapeHTML(u.name)}')" class="w-14 h-14 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700 cursor-zoom-in shadow-sm" loading="lazy" decoding="async">`
-      : `<div class="w-14 h-14 rounded-full border-2 border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>`;
+      : '<div class="w-14 h-14 rounded-full border-2 border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-sm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>';
 
     const pendingTools = this.getPendingTools(u.name);
     const pendingBadge =
@@ -313,7 +320,7 @@ export const AppCRUDCollaborators = {
     const data = window.App.Data.collaborators.map((c) => ({
       Nome: c.name,
       Crachá: c.badge,
-      Cargo: c.role,
+      Cargo: c.role
     }));
 
     const ws = window.XLSX.utils.json_to_sheet(data);
@@ -324,13 +331,17 @@ export const AppCRUDCollaborators = {
   },
 
   bulkAction: async function (action) {
-    if (this.selectedCollabs.size === 0) return;
+    if (this.selectedCollabs.size === 0) {
+      return;
+    }
     const collabs = window.App.Data.collaborators.filter((c) =>
       this.selectedCollabs.has(c.firebaseId)
     );
 
     if (action === 'delete') {
-      if (!confirm(`Excluir permanentemente ${collabs.length} colaborador(es)?`)) return;
+      if (!confirm(`Excluir permanentemente ${collabs.length} colaborador(es)?`)) {
+        return;
+      }
       try {
         const promises = collabs.map((c) =>
           deleteDoc(doc(db, DB_BASE_PATH, COLLECTIONS.COLLABORATORS, c.firebaseId))
@@ -354,7 +365,7 @@ export const AppCRUDCollaborators = {
         Crachá: c.badge,
         Cargo: c.role,
         Telefone: c.phone || '',
-        Status: c.status === 'inactive' ? 'Inativo' : 'Ativo',
+        Status: c.status === 'inactive' ? 'Inativo' : 'Ativo'
       }));
       const ws = window.XLSX.utils.json_to_sheet(data);
       const wb = window.XLSX.utils.book_new();
@@ -369,7 +380,9 @@ export const AppCRUDCollaborators = {
 
   toggleStatus: async function (id) {
     const c = window.App.Data.collaborators.find((x) => x.firebaseId === id);
-    if (!c) return;
+    if (!c) {
+      return;
+    }
     const newStatus = (c.status || 'active') === 'active' ? 'inactive' : 'active';
     try {
       await updateDoc(doc(db, DB_BASE_PATH, COLLECTIONS.COLLABORATORS, id), { status: newStatus });
@@ -386,7 +399,9 @@ export const AppCRUDCollaborators = {
     const modal = document.getElementById('collab-history-modal');
     const list = document.getElementById('collab-history-list');
     const title = document.getElementById('collab-history-name');
-    if (!modal || !list || !title) return;
+    if (!modal || !list || !title) {
+      return;
+    }
 
     title.textContent = collabName;
 
@@ -394,7 +409,7 @@ export const AppCRUDCollaborators = {
     logs.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
 
     if (logs.length === 0) {
-      list.innerHTML = `<div class="text-center py-8 text-slate-500 font-medium">Nenhum histórico de movimentação para este colaborador.</div>`;
+      list.innerHTML = '<div class="text-center py-8 text-slate-500 font-medium">Nenhum histórico de movimentação para este colaborador.</div>';
     } else {
       list.innerHTML = logs
         .map((log) => {
@@ -429,15 +444,13 @@ export const AppCRUDCollaborators = {
         .join('');
     }
 
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
+    modal.showModal();
   },
 
   closeHistoryModal: function () {
     const m = document.getElementById('collab-history-modal');
     if (m) {
-      m.classList.add('hidden');
-      m.classList.remove('flex');
+      m.close();
     }
   },
 
@@ -446,8 +459,7 @@ export const AppCRUDCollaborators = {
     const pre = document.getElementById('crud-collab-image-preview');
     const icon = document.getElementById('collab-image-icon');
     if (m) {
-      m.classList.remove('hidden');
-      m.classList.add('flex');
+      m.showModal();
     }
     document.getElementById('crud-collab-image').value = '';
     if (pre) {
@@ -482,8 +494,7 @@ export const AppCRUDCollaborators = {
   closeModal: () => {
     const m = document.getElementById('crud-collab-modal');
     if (m) {
-      m.classList.add('hidden');
-      m.classList.remove('flex');
+      m.close();
     }
   },
   saveCollaborator: async function () {
@@ -494,8 +505,9 @@ export const AppCRUDCollaborators = {
       p = document.getElementById('crud-collab-phone').value.trim(),
       file = document.getElementById('crud-collab-image');
 
-    if (!n || !b)
+    if (!n || !b) {
       return window.App.UI.showToast('Os campos Nome e Cracha/Ponto são obrigatórios.', 'warning');
+    }
     if (
       window.App.Data.collaborators.some(
         (u) =>
@@ -503,36 +515,44 @@ export const AppCRUDCollaborators = {
           u.badge &&
           String(u.badge).toLowerCase() === String(b).toLowerCase()
       )
-    )
+    ) {
       return window.App.UI.showToast('Cracha/Ponto já cadastrado.', 'warning');
+    }
     const btn = document.getElementById('btn-save-collab');
     const orig = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML =
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 mr-2 animate-spin inline"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Salvando...';
     try {
-      if (!auth.currentUser) throw new Error('Sessão inválida ou expirada.');
-      if (!db) throw new Error('Banco de dados não inicializado.');
+      if (!auth.currentUser) {
+        throw new Error('Sessão inválida ou expirada.');
+      }
+      if (!db) {
+        throw new Error('Banco de dados não inicializado.');
+      }
 
       let imgUrl = null;
       const collab = id ? window.App.Data.collaborators.find((c) => c.firebaseId === id) : null;
-      if (collab && collab.imageUrl) imgUrl = collab.imageUrl;
-      if (file && file.files.length > 0)
+      if (collab && collab.imageUrl) {
+        imgUrl = collab.imageUrl;
+      }
+      if (file && file.files.length > 0) {
         imgUrl = await window.Utils.compressImageToBase64(file.files[0]);
+      }
 
-      if (id)
+      if (id) {
         await window.Utils.withTimeout(
           updateDoc(doc(db, DB_BASE_PATH, COLLECTIONS.COLLABORATORS, id), {
             badge: b,
             name: n,
             role: r,
             phone: p,
-            imageUrl: imgUrl,
+            imageUrl: imgUrl
           }),
-          window.CONFIG.TIMEOUT_MS,
+          CONFIG.TIMEOUT_MS,
           'Tempo excedido ao atualizar colaborador.'
         );
-      else
+      } else {
         await window.Utils.withTimeout(
           addDoc(collection(db, DB_BASE_PATH, COLLECTIONS.COLLABORATORS), {
             badge: b,
@@ -540,11 +560,12 @@ export const AppCRUDCollaborators = {
             role: r,
             phone: p,
             status: 'active',
-            imageUrl: imgUrl,
+            imageUrl: imgUrl
           }),
-          window.CONFIG.TIMEOUT_MS,
+          CONFIG.TIMEOUT_MS,
           'Tempo excedido ao salvar colaborador.'
         );
+      }
       window.App.UI.showToast('Salvo com sucesso.', 'success');
       this.closeModal();
     } catch (e) {
@@ -565,30 +586,36 @@ export const AppCRUDCollaborators = {
     }
   },
   importFile: async function (e) {
-    if (!e || !e.target || !e.target.files) return;
+    if (!e || !e.target || !e.target.files) {
+      return;
+    }
     if (!window.XLSX) {
       window.App.UI.showToast('Carregando motor de Excel...', 'info');
       try {
         await window.Utils.loadScript(
           'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
         );
-      } catch (err) {
+      } catch {
         e.target.value = '';
         return window.App.UI.showToast('Erro ao carregar o motor.', 'error');
       }
     }
     const f = e.target.files[0];
-    if (!f) return;
+    if (!f) {
+      return;
+    }
     const r = new FileReader();
     r.onload = async (ev) => {
       try {
         const wb = window.XLSX.read(new Uint8Array(ev.target.result), {
-          type: 'array',
+          type: 'array'
         });
         const rows = window.XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
-          header: 1,
+          header: 1
         });
-        if (rows.length < 2) return window.App.UI.showToast('Arquivo vazio ou inválido.', 'error');
+        if (rows.length < 2) {
+          return window.App.UI.showToast('Arquivo vazio ou inválido.', 'error');
+        }
         window.App.UI.showToast('Importando lista... Aguarde.', 'info');
         let c = 0,
           dup = 0;
@@ -600,10 +627,12 @@ export const AppCRUDCollaborators = {
         );
         for (let i = 1; i < rows.length; i++) {
           const cols = rows[i];
-          if (!cols || cols.length === 0) continue;
-          const b = cols[0] != null ? String(cols[0]).trim() : '',
-            n = cols[1] != null ? String(cols[1]).trim() : '',
-            rl = cols[2] != null ? String(cols[2]).trim() : '';
+          if (!cols || cols.length === 0) {
+            continue;
+          }
+          const b = cols[0] !== null && cols[0] !== undefined ? String(cols[0]).trim() : '',
+            n = cols[1] !== null && cols[1] !== undefined ? String(cols[1]).trim() : '',
+            rl = cols[2] !== null && cols[2] !== undefined ? String(cols[2]).trim() : '';
           if (n) {
             const lN = n.toLowerCase();
             if (eN.has(lN) || (b && eB.has(b))) {
@@ -611,12 +640,14 @@ export const AppCRUDCollaborators = {
               continue;
             }
             eN.add(lN);
-            if (b) eB.add(b);
+            if (b) {
+              eB.add(b);
+            }
             try {
               await addDoc(collection(db, DB_BASE_PATH, COLLECTIONS.COLLABORATORS), {
                 badge: b,
                 name: n,
-                role: rl,
+                role: rl
               });
               c++;
             } catch (err) {
@@ -628,12 +659,12 @@ export const AppCRUDCollaborators = {
           `${c} registros importados. ${dup > 0 ? `(${dup} ignorados)` : ''}`,
           'success'
         );
-      } catch (err) {
+      } catch {
         window.App.UI.showToast('Falha ao ler Excel.', 'error');
       } finally {
         e.target.value = '';
       }
     };
     r.readAsArrayBuffer(f);
-  },
+  }
 };

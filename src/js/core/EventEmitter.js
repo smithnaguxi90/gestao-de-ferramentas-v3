@@ -38,7 +38,9 @@ export class EventEmitter {
   }
 
   off(event, listener) {
-    if (!this._events.has(event)) return this;
+    if (!this._events.has(event)) {
+      return this;
+    }
 
     const listeners = this._events.get(event);
 
@@ -59,7 +61,9 @@ export class EventEmitter {
   }
 
   emit(event, ...args) {
-    if (!this._events.has(event)) return false;
+    if (!this._events.has(event)) {
+      return false;
+    }
 
     const listeners = this._events.get(event) || [];
 
@@ -78,7 +82,7 @@ export class EventEmitter {
         try {
           listener(event, ...args);
         } catch (error) {
-          console.error(`Error in wildcard listener:`, error);
+          console.error('Error in wildcard listener:', error);
         }
       });
     }

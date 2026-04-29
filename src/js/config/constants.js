@@ -31,7 +31,7 @@ export const CONFIG = Object.freeze({
   ENABLE_CACHE: true,
   ENABLE_AUTO_BACKUP: false,
   AUTO_BACKUP_INTERVAL: 3600000, // 1 hora
-  LOG_LEVEL: 'info',
+  LOG_LEVEL: 'info'
 });
 
 /**
@@ -53,7 +53,7 @@ export const FIREBASE_CONFIG = Object.freeze({
   projectId: 'gestao-de-ferramentas-v3-1ce63',
   storageBucket: 'gestao-de-ferramentas-v3-1ce63.firebasestorage.app',
   messagingSenderId: '636169707348',
-  appId: '1:636169707348:web:7f3538f55064d7849632c1',
+  appId: '1:636169707348:web:7f3538f55064d7849632c1'
 });
 
 /**
@@ -71,7 +71,7 @@ export const COLLECTIONS = Object.freeze({
   TOOLS: 'tools',
   USERS: 'users',
   COLLABORATORS: 'collaborators',
-  HISTORY: 'history',
+  HISTORY: 'history'
 });
 
 /**
@@ -89,7 +89,7 @@ export const CDN_URLS = Object.freeze({
   XLSX: 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',
   JSPDF: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
   QR_CODE: 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
-  CHART_JS: 'https://cdn.jsdelivr.net/npm/chart.js',
+  CHART_JS: 'https://cdn.jsdelivr.net/npm/chart.js'
 });
 
 /**
@@ -105,7 +105,7 @@ export const CDN_URLS = Object.freeze({
 export const TOOL_STATUS = Object.freeze({
   AVAILABLE: 'available',
   BORROWED: 'borrowed',
-  MAINTENANCE: 'maintenance',
+  MAINTENANCE: 'maintenance'
 });
 
 /**
@@ -121,7 +121,7 @@ export const TOOL_STATUS = Object.freeze({
 export const HISTORY_TYPE = Object.freeze({
   IN: 'in',
   OUT: 'out',
-  MAINTENANCE: 'maintenance',
+  MAINTENANCE: 'maintenance'
 });
 
 /**
@@ -137,7 +137,7 @@ export const HISTORY_TYPE = Object.freeze({
 export const ACCESS_LEVEL = Object.freeze({
   ADMIN: 'Administrador',
   OPERATOR: 'Operador',
-  VIEWER: 'Visualizador',
+  VIEWER: 'Visualizador'
 });
 
 // Path base do Firestore

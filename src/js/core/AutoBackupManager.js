@@ -5,7 +5,6 @@
 
 import { eventBus } from '../core/EventEmitter.js';
 import { errorHandler, DatabaseError } from '../core/ErrorHandler.js';
-import { cacheManager } from '../core/CacheManager.js';
 import { metrics } from '../core/MetricsManager.js';
 import { CONFIG, COLLECTIONS, DB_BASE_PATH } from '../app.js';
 import { db } from '../app.js';
@@ -14,7 +13,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
-  setDoc,
+  setDoc
 } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 import { notifications } from '../core/NotificationManager.js';
 
@@ -57,7 +56,9 @@ export class AutoBackupManager {
    * Para o backup automático
    */
   stop() {
-    if (!this._isEnabled) return this;
+    if (!this._isEnabled) {
+      return this;
+    }
 
     this._isEnabled = false;
     if (this._interval) {
@@ -79,7 +80,7 @@ export class AutoBackupManager {
       showProgress = true,
       includeHistory = true,
       compress = false,
-      onProgress = null,
+      onProgress = null
     } = options;
 
     if (this._isRunning) {
@@ -91,26 +92,38 @@ export class AutoBackupManager {
     eventBus.emit('backup:started');
 
     try {
-      if (showProgress) notifications.info('Iniciando backup...');
+      if (showProgress) {
+        notifications.info('Iniciando backup...');
+      }
 
       // Step 1: Collect all data
-      if (onProgress) onProgress(10, 'Coletando dados...');
+      if (onProgress) {
+        onProgress(10, 'Coletando dados...');
+      }
       const data = await this._collectData(includeHistory);
 
       // Step 2: Validate data
-      if (onProgress) onProgress(30, 'Validando dados...');
+      if (onProgress) {
+        onProgress(30, 'Validando dados...');
+      }
       this._validateData(data);
 
       // Step 3: Create backup object
-      if (onProgress) onProgress(50, 'Criando backup...');
+      if (onProgress) {
+        onProgress(50, 'Criando backup...');
+      }
       const backup = this._createBackupObject(data);
 
       // Step 4: Compress if needed
-      if (onProgress) onProgress(70, compress ? 'Comprimindo...' : 'Finalizando...');
+      if (onProgress) {
+        onProgress(70, compress ? 'Comprimindo...' : 'Finalizando...');
+      }
       const finalBackup = compress ? await this._compressBackup(backup) : backup;
 
       // Step 5: Download
-      if (onProgress) onProgress(90, 'Baixando arquivo...');
+      if (onProgress) {
+        onProgress(90, 'Baixando arquivo...');
+      }
       this._downloadBackup(finalBackup);
 
       // Step 6: Save to history
@@ -128,7 +141,7 @@ export class AutoBackupManager {
       this._lastBackup = {
         timestamp: new Date().toISOString(),
         size: finalBackup.size,
-        records: finalBackup.summary.totalRecords,
+        records: finalBackup.summary.totalRecords
       };
 
       return finalBackup;
@@ -158,18 +171,26 @@ export class AutoBackupManager {
     eventBus.emit('restore:started');
 
     try {
-      if (showProgress) notifications.info('Iniciando restauração...');
+      if (showProgress) {
+        notifications.info('Iniciando restauração...');
+      }
 
       // Step 1: Read file
-      if (onProgress) onProgress(10, 'Lendo arquivo...');
+      if (onProgress) {
+        onProgress(10, 'Lendo arquivo...');
+      }
       const backupData = await this._readBackupFile(backupFile);
 
       // Step 2: Validate backup
-      if (onProgress) onProgress(20, 'Validando backup...');
+      if (onProgress) {
+        onProgress(20, 'Validando backup...');
+      }
       this._validateBackupStructure(backupData);
 
       // Step 3: Confirm restore
-      if (onProgress) onProgress(30, 'Preparando restauração...');
+      if (onProgress) {
+        onProgress(30, 'Preparando restauração...');
+      }
       const confirmed =
         options.forceConfirm !== false &&
         confirm('ATENÇÃO: Isso irá substituir TODOS os dados atuais!\n\nDeseja continuar?');
@@ -179,20 +200,26 @@ export class AutoBackupManager {
       }
 
       // Step 4: Clear existing data
-      if (onProgress) onProgress(40, 'Limpando dados atuais...');
+      if (onProgress) {
+        onProgress(40, 'Limpando dados atuais...');
+      }
       await this._clearAllData();
 
       // Step 5: Restore collections
-      if (onProgress) onProgress(60, 'Restaurando dados...');
+      if (onProgress) {
+        onProgress(60, 'Restaurando dados...');
+      }
       await this._restoreCollections(backupData);
 
       // Step 6: Verify
-      if (onProgress) onProgress(90, 'Verificando integridade...');
+      if (onProgress) {
+        onProgress(90, 'Verificando integridade...');
+      }
       await this._verifyRestore(backupData);
 
       // Success
       metrics.stopTimer('restore', {
-        records: backupData.summary?.totalRecords || 0,
+        records: backupData.summary?.totalRecords || 0
       });
       metrics.increment('restore.success');
       eventBus.emit('restore:complete');
@@ -258,7 +285,7 @@ export class AutoBackupManager {
       snapshot.forEach((doc) => {
         data[colName].push({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         });
       });
 
@@ -296,14 +323,14 @@ export class AutoBackupManager {
         collections: Object.keys(data.data).length,
         collectionSizes: Object.fromEntries(
           Object.entries(data.data).map(([key, items]) => [key, items.length])
-        ),
+        )
       },
       system: {
         userAgent: navigator.userAgent,
         screenResolution: `${screen.width}x${screen.height}`,
-        language: navigator.language,
+        language: navigator.language
       },
-      data: data.data,
+      data: data.data
     };
   }
 
@@ -364,7 +391,7 @@ export class AutoBackupManager {
       COLLECTIONS.TOOLS,
       COLLECTIONS.USERS,
       COLLECTIONS.COLLABORATORS,
-      COLLECTIONS.HISTORY,
+      COLLECTIONS.HISTORY
     ];
 
     for (const colName of collections) {
@@ -409,12 +436,14 @@ export class AutoBackupManager {
    * Executa backup automático
    */
   async _performBackup() {
-    if (this._isRunning) return;
+    if (this._isRunning) {
+      return;
+    }
 
     try {
       await this.backup({
         showProgress: false,
-        onProgress: null,
+        onProgress: null
       });
     } catch (error) {
       console.error('[AutoBackup] Auto backup failed:', error);
@@ -429,7 +458,7 @@ export class AutoBackupManager {
       timestamp: backup.exportDate,
       size: backup.size || 0,
       records: backup.summary?.totalRecords || 0,
-      collections: backup.summary?.collections || 0,
+      collections: backup.summary?.collections || 0
     };
 
     this._backupHistory.unshift(entry);

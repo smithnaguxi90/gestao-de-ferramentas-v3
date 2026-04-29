@@ -8,17 +8,17 @@ import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 import {
-  firebaseConfig,
+  FIREBASE_CONFIG,
   DB_BASE_PATH,
-  ALL_COLLECTIONS,
-} from "./src/js/firebase-config.js";
+  COLLECTIONS,
+} from "./src/js/config/constants.js";
 
 dotenv.config();
 
 async function createBackup() {
   console.log("\n🚀 Iniciando Backup do Sistema...\n");
 
-  const app = initializeApp(firebaseConfig, "backup-app");
+  const app = initializeApp(FIREBASE_CONFIG, "backup-app");
   const db = getFirestore(app);
   const auth = getAuth(app);
 
@@ -45,7 +45,7 @@ async function createBackup() {
   const backupData = {};
   let totalDocs = 0;
 
-  for (const colName of COLLECTIONS) {
+  for (const colName of Object.values(COLLECTIONS)) {
     console.log(`📥 Lendo collection: ${colName}...`);
     try {
       // Usa o caminho aninhado

@@ -14,7 +14,7 @@ export {
   NetworkError,
   DatabaseError,
   ErrorHandler,
-  errorHandler,
+  errorHandler
 } from './ErrorHandler.js';
 export { CacheManager, cacheManager } from './CacheManager.js';
 export { Validator, validator } from './Validator.js';

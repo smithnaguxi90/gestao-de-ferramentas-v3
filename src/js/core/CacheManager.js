@@ -13,7 +13,7 @@ export class CacheManager {
       misses: 0,
       sets: 0,
       deletions: 0,
-      evictions: 0,
+      evictions: 0
     };
     this._cleanupInterval = null;
 
@@ -66,7 +66,7 @@ export class CacheManager {
       expiresAt: ttl === Infinity ? Infinity : now + ttl,
       lastAccess: now,
       accessCount: 0,
-      size: this._estimateSize(value),
+      size: this._estimateSize(value)
     });
 
     this._stats.sets++;
@@ -88,7 +88,9 @@ export class CacheManager {
    * Verifica se uma chave existe e é válida
    */
   has(key) {
-    if (!this._store.has(key)) return false;
+    if (!this._store.has(key)) {
+      return false;
+    }
 
     const entry = this._store.get(key);
     if (entry.ttl !== Infinity && Date.now() > entry.expiresAt) {
@@ -104,7 +106,9 @@ export class CacheManager {
    */
   async getOrSet(key, factory, options = {}) {
     const cached = this.get(key);
-    if (cached !== null) return cached;
+    if (cached !== null) {
+      return cached;
+    }
 
     const value = typeof factory === 'function' ? await factory() : factory;
     this.set(key, value, options);
@@ -131,7 +135,7 @@ export class CacheManager {
       maxSize: this._maxSize,
       hitRate: this._calculateHitRate(),
       totalSize: this._formatBytes(totalSize),
-      avgAccessCount: this._getAvgAccessCount(),
+      avgAccessCount: this._getAvgAccessCount()
     };
   }
 
@@ -206,7 +210,9 @@ export class CacheManager {
    * Calcula média de acessos
    */
   _getAvgAccessCount() {
-    if (this._store.size === 0) return 0;
+    if (this._store.size === 0) {
+      return 0;
+    }
 
     const total = Array.from(this._store.values()).reduce(
       (sum, entry) => sum + entry.accessCount,
@@ -220,10 +226,18 @@ export class CacheManager {
    * Estima tamanho de um valor em bytes
    */
   _estimateSize(value) {
-    if (value === null || value === undefined) return 0;
-    if (typeof value === 'string') return value.length * 2;
-    if (typeof value === 'number') return 8;
-    if (typeof value === 'boolean') return 4;
+    if (value === null || value === undefined) {
+      return 0;
+    }
+    if (typeof value === 'string') {
+      return value.length * 2;
+    }
+    if (typeof value === 'number') {
+      return 8;
+    }
+    if (typeof value === 'boolean') {
+      return 4;
+    }
 
     try {
       return JSON.stringify(value).length * 2;
@@ -236,7 +250,9 @@ export class CacheManager {
    * Formata bytes para leitura humana
    */
   _formatBytes(bytes) {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) {
+      return '0 Bytes';
+    }
 
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -271,7 +287,9 @@ export class CacheManager {
   restore(storageKey = 'app-cache') {
     try {
       const data = localStorage.getItem(storageKey);
-      if (!data) return this;
+      if (!data) {
+        return this;
+      }
 
       const parsed = JSON.parse(data);
       const now = Date.now();
@@ -305,5 +323,5 @@ export const cacheManager = new CacheManager({
   maxSize: 500,
   defaultTTL: 600000, // 10 minutos
   autoCleanup: true,
-  cleanupInterval: 120000, // 2 minutos
+  cleanupInterval: 120000 // 2 minutos
 });

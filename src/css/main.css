@@ -201,7 +201,8 @@ body,
 }
 
 #main-sidebar.lg\:w-20 .nav-btn,
-#main-sidebar.lg\:w-20 #btn-logout-sidebar {
+#main-sidebar.lg\:w-20 #btn-logout-sidebar,
+#main-sidebar.lg\:w-20 #btn-install-pwa {
   justify-content: center !important;
 }
 #main-sidebar.lg\:w-20 .h-20 {
@@ -211,36 +212,10 @@ body,
 }
 #main-sidebar.lg\:w-20 .nav-btn span,
 #main-sidebar.lg\:w-20 #btn-logout-sidebar span,
+#main-sidebar.lg\:w-20 #btn-install-pwa span,
 #main-sidebar.lg\:w-20 p.uppercase,
 #main-sidebar.lg\:w-20 #sidebar-logo-text {
   display: none !important;
-}
-
-.btn-standard {
-  min-height: 3rem;
-  padding: 0.75rem 1rem;
-  border-radius: 1rem;
-  gap: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-standard-sm {
-  min-height: 2.6rem;
-  padding: 0.65rem 0.9rem;
-  font-size: 0.9rem;
-}
-
-.btn-icon-standard {
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  width: 2.75rem;
-  height: 2.75rem;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .btn {
@@ -251,23 +226,6 @@ body,
 }
 .btn-secondary {
   @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm;
-}
-.btn-tertiary {
-  @apply bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700;
-}
-.btn-danger {
-  @apply bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/20;
-}
-.btn-ghost {
-  @apply bg-transparent text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800;
-}
-.btn-icon {
-  @apply inline-flex items-center justify-center rounded-xl transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-500/20;
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  width: 2.75rem;
-  height: 2.75rem;
-  padding: 0;
 }
 
 .panel-card {
@@ -282,11 +240,177 @@ body,
 .panel-title {
   @apply text-xl md:text-3xl font-black text-slate-900 dark:text-white;
 }
-.panel-subtitle {
-  @apply text-xs md:text-base text-slate-500 dark:text-slate-400 mt-0.5 md:mt-1;
+
+/* Camada de sobriedade visual para reduzir disputa entre filtros, cards e ações secundárias. */
+#quick-filters .quick-filter-btn,
+#inventory-quick-filters .inv-filter-btn,
+#users-filters .filter-btn,
+#collab-quick-filters .collab-filter-btn,
+.sort-btn {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #475569 !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
-.panel-actions {
-  @apply flex flex-wrap items-center gap-3 justify-end;
+
+.dark #quick-filters .quick-filter-btn,
+.dark #inventory-quick-filters .inv-filter-btn,
+.dark #users-filters .filter-btn,
+.dark #collab-quick-filters .collab-filter-btn,
+.dark .sort-btn {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+#quick-filters .quick-filter-btn:hover,
+#inventory-quick-filters .inv-filter-btn:hover,
+#users-filters .filter-btn:hover,
+#collab-quick-filters .collab-filter-btn:hover,
+.sort-btn:hover {
+  border-color: #cbd5e1 !important;
+  background-color: #f8fafc !important;
+}
+
+.dark #quick-filters .quick-filter-btn:hover,
+.dark #inventory-quick-filters .inv-filter-btn:hover,
+.dark #users-filters .filter-btn:hover,
+.dark #collab-quick-filters .collab-filter-btn:hover,
+.dark .sort-btn:hover {
+  border-color: #475569 !important;
+  background-color: #1e293b !important;
+}
+
+#quick-filters .quick-filter-btn.active,
+#inventory-quick-filters .inv-filter-btn.active,
+#users-filters .filter-btn.active,
+#collab-quick-filters .collab-filter-btn.active,
+.sort-btn.active {
+  background-color: #eff6ff !important;
+  border-color: #bfdbfe !important;
+  color: #1d4ed8 !important;
+  box-shadow: inset 0 0 0 1px rgba(29, 78, 216, 0.08) !important;
+}
+
+.dark #quick-filters .quick-filter-btn.active,
+.dark #inventory-quick-filters .inv-filter-btn.active,
+.dark #users-filters .filter-btn.active,
+.dark #collab-quick-filters .collab-filter-btn.active,
+.dark .sort-btn.active {
+  background-color: rgba(30, 64, 175, 0.22) !important;
+  border-color: rgba(147, 197, 253, 0.36) !important;
+  color: #93c5fd !important;
+}
+
+.btn[class*='bg-emerald-600'],
+.btn[class*='bg-sky-600'],
+.btn[class*='bg-amber-600'],
+.btn[class*='bg-indigo-600'] {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #475569 !important;
+  box-shadow: none !important;
+}
+
+.dark .btn[class*='bg-emerald-600'],
+.dark .btn[class*='bg-sky-600'],
+.dark .btn[class*='bg-amber-600'],
+.dark .btn[class*='bg-indigo-600'] {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.btn[class*='bg-emerald-600']:hover,
+.btn[class*='bg-sky-600']:hover,
+.btn[class*='bg-amber-600']:hover,
+.btn[class*='bg-indigo-600']:hover {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+.dark .btn[class*='bg-emerald-600']:hover,
+.dark .btn[class*='bg-sky-600']:hover,
+.dark .btn[class*='bg-amber-600']:hover,
+.dark .btn[class*='bg-indigo-600']:hover {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+.stat-card:hover {
+  border-color: #cbd5e1 !important;
+}
+
+.dark .stat-card:hover {
+  border-color: #475569 !important;
+}
+
+.stat-card > .absolute {
+  background-color: #f1f5f9 !important;
+  opacity: 0.65 !important;
+}
+
+.dark .stat-card > .absolute {
+  background-color: #1e293b !important;
+}
+
+.stat-card [class*='bg-brand-50'],
+.stat-card [class*='bg-brand-100'],
+.stat-card [class*='bg-emerald-50'],
+.stat-card [class*='bg-emerald-100'],
+.stat-card [class*='bg-amber-50'],
+.stat-card [class*='bg-amber-100'],
+.stat-card [class*='bg-rose-50'],
+.stat-card [class*='bg-rose-100'] {
+  background-color: #f8fafc !important;
+}
+
+.dark .stat-card [class*='bg-brand-900'],
+.dark .stat-card [class*='bg-emerald-900'],
+.dark .stat-card [class*='bg-amber-900'],
+.dark .stat-card [class*='bg-rose-900'] {
+  background-color: rgba(30, 41, 59, 0.72) !important;
+}
+
+.stat-card [class*='text-brand'],
+.stat-card [class*='text-emerald'],
+.stat-card [class*='text-amber'],
+.stat-card [class*='text-rose'] {
+  color: #334155 !important;
+}
+
+.dark .stat-card [class*='text-brand'],
+.dark .stat-card [class*='text-emerald'],
+.dark .stat-card [class*='text-amber'],
+.dark .stat-card [class*='text-rose'] {
+  color: #e2e8f0 !important;
+}
+
+#inventory-stats > div {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.dark #inventory-stats > div {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+#inventory-stats [class*='text-brand'],
+#inventory-stats [class*='text-emerald'],
+#inventory-stats [class*='text-amber'],
+#inventory-stats [class*='text-rose'] {
+  color: #334155 !important;
+}
+
+.dark #inventory-stats [class*='text-brand'],
+.dark #inventory-stats [class*='text-emerald'],
+.dark #inventory-stats [class*='text-amber'],
+.dark #inventory-stats [class*='text-rose'] {
+  color: #e2e8f0 !important;
 }
 
 /* Animations */
@@ -318,9 +442,6 @@ body,
   }
   .stat-card .stat-number {
     font-size: 1.5rem;
-  }
-  .stat-card .stat-label {
-    font-size: 0.75rem;
   }
   .header-title {
     font-size: 0.875rem;
@@ -755,26 +876,6 @@ body,
   }
 }
 
-/* Scan line animation for camera mode */
-.scan-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #10b981, transparent);
-  animation: scan-move 2s ease-in-out infinite;
-}
-
-@keyframes scan-move {
-  0%,
-  100% {
-    top: 10%;
-  }
-  50% {
-    top: 90%;
-  }
-}
-
 /* Quick action buttons hover */
 #scanner-quick-actions button {
   position: relative;
@@ -875,45 +976,6 @@ body,
 .inv-filter-btn.active {
   transform: translateY(-1px) scale(1.02);
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
-}
-
-/* Inventory toolbar styles */
-.inventory-actions {
-  width: 100%;
-}
-
-.inventory-actions-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.inventory-action-button {
-  min-width: 10rem;
-}
-
-.inventory-view-switch {
-  min-width: 12rem;
-  justify-content: flex-end;
-}
-
-.inventory-view-btn {
-  min-width: 2.5rem;
-  min-height: 2.5rem;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.inventory-view-btn:hover {
-  transform: translateY(-1px);
-}
-
-.inventory-view-btn.active,
-.inventory-view-btn[aria-pressed='true'] {
-  background-color: rgba(37, 99, 235, 0.12);
-  color: #1d4ed8;
 }
 
 /* User counter cards */

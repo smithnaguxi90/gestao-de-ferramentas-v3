@@ -6,11 +6,13 @@ export const AppPDF = {
         await window.Utils.loadScript(
           'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
         );
-      } catch (e) {
+      } catch {
         return window.App.UI.showToast('Erro de rede.', 'error');
       }
     }
-    if (!window.jspdf || !window.jspdf.jsPDF) return;
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      return;
+    }
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const d = new Date();
@@ -135,9 +137,9 @@ export const AppPDF = {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
     doc.text('Assinatura do Colaborador', 62.5, sY + 9, {
-      align: 'center',
+      align: 'center'
     });
     doc.text('Assinatura do Emissor', 147.5, sY + 9, { align: 'center' });
     doc.save(`Termo_${tool.code}_${userName.replace(/\s+/g, '_')}.pdf`);
-  },
+  }
 };

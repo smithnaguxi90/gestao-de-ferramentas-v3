@@ -58,7 +58,7 @@ export class MetricsManager {
   startTimer(name) {
     this._timers.set(name, {
       start: Date.now(),
-      laps: [],
+      laps: []
     });
     return this;
   }
@@ -81,7 +81,7 @@ export class MetricsManager {
       duration,
       totalLaps,
       lapCount: timer.laps.length,
-      ...metadata,
+      ...metadata
     };
 
     this._emitMetric('timer', metric);
@@ -115,7 +115,7 @@ export class MetricsManager {
       name,
       value,
       tags,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
 
     this._emitMetric('custom', metric);
@@ -156,7 +156,7 @@ export class MetricsManager {
       screen,
       action,
       timestamp: Date.now(),
-      sessionDuration: Date.now() - this._startTime,
+      sessionDuration: Date.now() - this._startTime
     });
   }
 
@@ -171,7 +171,7 @@ export class MetricsManager {
       action,
       label,
       value,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     });
   }
 
@@ -186,7 +186,7 @@ export class MetricsManager {
       type: errorType,
       message: errorMessage,
       context,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     });
   }
 
@@ -200,7 +200,7 @@ export class MetricsManager {
     this._emitMetric('feature', {
       feature,
       action,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     });
   }
 
@@ -215,7 +215,7 @@ export class MetricsManager {
       counters: Object.fromEntries(this._counters),
       activeTimers: Array.from(this._timers.keys()),
       historyLength: this._history.length,
-      startTime: this._startTime,
+      startTime: this._startTime
     };
   }
 
@@ -235,10 +235,10 @@ export class MetricsManager {
         errorRate:
           operationsTotal > 0
             ? ((errorRate / (operationsTotal + errorRate)) * 100).toFixed(2) + '%'
-            : '0%',
+            : '0%'
       },
       counters,
-      recentActivity: this._history.slice(-50),
+      recentActivity: this._history.slice(-50)
     };
   }
 
@@ -250,7 +250,7 @@ export class MetricsManager {
       timestamp: new Date().toISOString(),
       uptime: Date.now() - this._startTime,
       counters: Object.fromEntries(this._counters),
-      history: this._history,
+      history: this._history
     };
   }
 
@@ -274,7 +274,9 @@ export class MetricsManager {
   load(storageKey = 'app-metrics') {
     try {
       const data = localStorage.getItem(storageKey);
-      if (!data) return this;
+      if (!data) {
+        return this;
+      }
 
       const parsed = JSON.parse(data);
 
@@ -339,7 +341,7 @@ export class MetricsManager {
     const metric = {
       type,
       data,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     };
 
     // Adiciona ao histórico
@@ -362,9 +364,15 @@ export class MetricsManager {
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
-    if (days > 0) return `${days}d ${hours % 24}h`;
-    if (hours > 0) return `${hours}h ${minutes % 60}m`;
-    if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+    if (days > 0) {
+      return `${days}d ${hours % 24}h`;
+    }
+    if (hours > 0) {
+      return `${hours}h ${minutes % 60}m`;
+    }
+    if (minutes > 0) {
+      return `${minutes}m ${seconds % 60}s`;
+    }
     return `${seconds}s`;
   }
 

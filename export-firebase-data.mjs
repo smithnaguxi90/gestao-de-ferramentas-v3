@@ -5,12 +5,12 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import fs from "fs";
-import { firebaseConfig, COLLECTIONS } from "./src/js/firebase-config.js";
+import { FIREBASE_CONFIG, DB_BASE_PATH, COLLECTIONS } from "./src/js/config/constants.js";
 
 async function exportFirebaseData() {
   console.log("📊 Lendo dados do Firebase...\n");
 
-  const app = initializeApp(firebaseConfig);
+  const app = initializeApp(FIREBASE_CONFIG);
   const db = getFirestore(app);
   const auth = getAuth(app);
 
@@ -31,12 +31,12 @@ async function exportFirebaseData() {
     process.exit(1);
   }
 
-  const collections = Object.values(COLLECTIONS).filter((c) => c !== "alerts");
+  const collections = Object.values(COLLECTIONS);
   const data = {};
 
   for (const colName of collections) {
     try {
-      const colRef = collection(db, colName);
+      const colRef = collection(db, DB_BASE_PATH, colName);
       const snapshot = await getDocs(colRef);
 
       const docs = [];

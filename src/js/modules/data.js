@@ -7,7 +7,7 @@ import {
   deleteDoc,
   addDoc,
   getDocs,
-  query,
+  query
 } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 import { db, DB_BASE_PATH, COLLECTIONS } from '../app.js';
 import { notifications } from '../core/NotificationManager.js';
@@ -29,7 +29,9 @@ export const AppData = {
   allHistoryLogs: null,
   destroyListeners: function () {
     this.listeners.forEach((u) => {
-      if (typeof u === 'function') u();
+      if (typeof u === 'function') {
+        u();
+      }
     });
     this.listeners = [];
   },
@@ -46,7 +48,7 @@ export const AppData = {
         (s) => {
           this.tools = s.docs.map((d) => ({
             firebaseId: d.id,
-            ...d.data(),
+            ...d.data()
           }));
           this.toolsLoaded = true;
           window.App.UI.renderAll();
@@ -68,13 +70,17 @@ export const AppData = {
             .map((d) => ({ firebaseId: d.id, ...d.data() }))
             .sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
           this.usersLoaded = true;
-          if (window.App.UI.activeTab === 'users') window.App.CRUDUsers.render();
+          if (window.App.UI.activeTab === 'users') {
+            window.App.CRUDUsers.render();
+          }
         },
         (err) => {
           this.users = [];
           this.usersLoaded = true;
           window.Logger.warn('Erro ao carregar usuarios', err);
-          if (window.App.UI.activeTab === 'users') window.App.CRUDUsers.render();
+          if (window.App.UI.activeTab === 'users') {
+            window.App.CRUDUsers.render();
+          }
         }
       )
     );
@@ -87,13 +93,17 @@ export const AppData = {
             .map((d) => ({ firebaseId: d.id, ...d.data() }))
             .sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
           this.collaboratorsLoaded = true;
-          if (window.App.UI.activeTab === 'collaborators') window.App.CRUDCollaborators.render();
+          if (window.App.UI.activeTab === 'collaborators') {
+            window.App.CRUDCollaborators.render();
+          }
         },
         (err) => {
           this.collaborators = [];
           this.collaboratorsLoaded = true;
           window.Logger.warn('Erro ao carregar colaboradores', err);
-          if (window.App.UI.activeTab === 'collaborators') window.App.CRUDCollaborators.render();
+          if (window.App.UI.activeTab === 'collaborators') {
+            window.App.CRUDCollaborators.render();
+          }
         }
       )
     );
@@ -111,7 +121,7 @@ export const AppData = {
       (s) => {
         this.allHistoryLogs = s.docs.map((d) => ({
           firebaseId: d.id,
-          ...d.data(),
+          ...d.data()
         }));
         this.processAndRenderHistory();
       },
@@ -120,22 +130,31 @@ export const AppData = {
     this.listeners.push(this.historyUnsub);
   },
   processAndRenderHistory: function () {
-    if (!this.allHistoryLogs) return;
+    if (!this.allHistoryLogs) {
+      return;
+    }
     let logs = [...this.allHistoryLogs];
     logs.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
     const timeFilter = document.getElementById('history-time-filter')?.value || 'all';
     if (timeFilter !== 'all') {
       const d = new Date();
-      if (timeFilter === 'today') d.setHours(0, 0, 0, 0);
-      else if (timeFilter === '7days') d.setDate(d.getDate() - 7);
-      else if (timeFilter === '30days') d.setDate(d.getDate() - 30);
+      if (timeFilter === 'today') {
+        d.setHours(0, 0, 0, 0);
+      } else if (timeFilter === '7days') {
+        d.setDate(d.getDate() - 7);
+      } else if (timeFilter === '30days') {
+        d.setDate(d.getDate() - 30);
+      }
       const isoDate = d.toISOString();
       logs = logs.filter((l) => l.date >= isoDate);
     }
     const hasMore = logs.length > this.historyLimit;
     document.getElementById('history-load-more-container')?.classList.toggle('hidden', !hasMore);
     this.history = logs.slice(0, this.historyLimit);
-    if (window.App.UI.activeTab === 'history') window.App.UI.renderHistory();
+    window.App?.UI?.renderDashboardTimeline?.();
+    if (window.App.UI.activeTab === 'history') {
+      window.App.UI.renderHistory();
+    }
   },
   loadMoreHistory: function () {
     this.historyLimit += 20;
@@ -154,10 +173,14 @@ export const AppData = {
     const t = this.tools.find(
       (x) => window.Utils.removeAccents(x.code).toLowerCase() === searchCode
     );
-    if (!t) return false;
+    if (!t) {
+      return false;
+    }
 
     await updateDoc(doc(db, DB_BASE_PATH, COLLECTIONS.TOOLS, t.firebaseId), updates);
-    if (actionType) await this.logAction(t, actionType, user);
+    if (actionType) {
+      await this.logAction(t, actionType, user);
+    }
     return true;
   },
   logAction: async function (tool, type, user) {
@@ -168,11 +191,13 @@ export const AppData = {
       type: type,
       user: user || 'Sistema',
       ip: window.App.Session.currentIp || 'Desconhecido',
-      device: window.App.Session.currentDevice || 'Desconhecido',
+      device: window.App.Session.currentDevice || 'Desconhecido'
     });
   },
   cleanOldLogs: async function () {
-    if (!confirm('Deseja excluir registros > 30 dias?')) return;
+    if (!confirm('Deseja excluir registros > 30 dias?')) {
+      return;
+    }
     const old = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
     const s = await getDocs(query(collection(db, DB_BASE_PATH, COLLECTIONS.HISTORY)));
@@ -191,12 +216,16 @@ export const AppData = {
   resetAllData: async function () {
     const confirmText =
       'ATENÇÃO: Isso irá apagar TODOS os dados do sistema!\n\n- Ferramentas\n- Usuários\n- Colaboradores\n- Histórico\n\nTem certeza que deseja continuar?';
-    if (!confirm(confirmText)) return;
+    if (!confirm(confirmText)) {
+      return;
+    }
 
     const secondConfirm = confirm(
       'ÚLTIMA CHANCE! Digite OK para confirmar o reset completo dos dados.'
     );
-    if (secondConfirm !== true) return;
+    if (secondConfirm !== true) {
+      return;
+    }
 
     notifications.info('Resetando dados...');
 
@@ -204,7 +233,7 @@ export const AppData = {
       COLLECTIONS.TOOLS,
       COLLECTIONS.USERS,
       COLLECTIONS.COLLABORATORS,
-      COLLECTIONS.HISTORY,
+      COLLECTIONS.HISTORY
     ];
 
     for (const colName of collections) {
@@ -227,13 +256,13 @@ export const AppData = {
       COLLECTIONS.TOOLS,
       COLLECTIONS.USERS,
       COLLECTIONS.COLLABORATORS,
-      COLLECTIONS.HISTORY,
+      COLLECTIONS.HISTORY
     ];
 
     const backupData = {
       exportDate: new Date().toISOString(),
       version: '3.0',
-      data: {},
+      data: {}
     };
 
     for (const colName of collections) {
@@ -242,7 +271,7 @@ export const AppData = {
       snapshot.forEach((d) => {
         backupData.data[colName].push({
           id: d.id,
-          ...d.data(),
+          ...d.data()
         });
       });
       console.info(`Coleção ${colName} exportada: ${backupData.data[colName].length} registros.`);
@@ -266,7 +295,9 @@ export const AppData = {
   },
   importJSON: async function (event) {
     const file = event.target.files[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     if (!file.name.endsWith('.json')) {
       notifications.error('Por favor, selecione um arquivo JSON válido.');
@@ -298,13 +329,15 @@ export const AppData = {
         COLLECTIONS.TOOLS,
         COLLECTIONS.USERS,
         COLLECTIONS.COLLABORATORS,
-        COLLECTIONS.HISTORY,
+        COLLECTIONS.HISTORY
       ];
 
       let totalRestored = 0;
 
       for (const colName of collections) {
-        if (!backupData.data[colName]) continue;
+        if (!backupData.data[colName]) {
+          continue;
+        }
 
         const colRef = collection(db, DB_BASE_PATH, colName);
 
@@ -346,7 +379,7 @@ export const AppData = {
         await window.Utils.loadScript(
           'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
         );
-      } catch (err) {
+      } catch {
         return notifications.error('Erro ao carregar o motor.');
       }
     }
@@ -361,7 +394,7 @@ export const AppData = {
             ? 'Emprestada'
             : 'Manutenção',
       Responsável: t.currentUser || '',
-      'Ultima Acao': t.lastAction ? new Date(t.lastAction).toLocaleString('pt-BR') : '',
+      'Ultima Acao': t.lastAction ? new Date(t.lastAction).toLocaleString('pt-BR') : ''
     }));
     const ws = window.XLSX.utils.json_to_sheet(data);
     const wb = window.XLSX.utils.book_new();
@@ -374,7 +407,9 @@ export const AppData = {
    */
   importExcel: async function (event) {
     const file = event?.target?.files?.[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     // Verifica extensão
     const validExts = ['.xlsx', '.xls'];
@@ -436,9 +471,11 @@ export const AppData = {
 
           // Mapeia status
           let status = 'available';
-          if (statusRaw.includes('emprest') || statusRaw === 'borrowed') status = 'borrowed';
-          else if (statusRaw.includes('manuten') || statusRaw === 'maintenance')
+          if (statusRaw.includes('emprest') || statusRaw === 'borrowed') {
+            status = 'borrowed';
+          } else if (statusRaw.includes('manuten') || statusRaw === 'maintenance') {
             status = 'maintenance';
+          }
 
           await addDoc(collection(db, DB_BASE_PATH, COLLECTIONS.TOOLS), {
             code,
@@ -449,7 +486,7 @@ export const AppData = {
             lastAction: new Date().toISOString(),
             currentUser: row['Responsável'] || row['Responsavel'] || null,
             imageUrl: null,
-            notes: row['Observações'] || row['Observacoes'] || row['Notes'] || null,
+            notes: row['Observações'] || row['Observacoes'] || row['Notes'] || null
           });
 
           imported++;
@@ -471,5 +508,5 @@ export const AppData = {
     } finally {
       event.target.value = '';
     }
-  },
+  }
 };

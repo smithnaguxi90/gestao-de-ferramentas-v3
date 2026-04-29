@@ -18,7 +18,7 @@ export class ServiceContainer {
     this._singletons.set(name, {
       instance,
       lazy: options.lazy === true,
-      dependencies: options.dependencies || [],
+      dependencies: options.dependencies || []
     });
 
     return this;
@@ -30,7 +30,7 @@ export class ServiceContainer {
   factory(name, factoryFn, options = {}) {
     this._factories.set(name, {
       factory: factoryFn,
-      dependencies: options.dependencies || [],
+      dependencies: options.dependencies || []
     });
 
     return this;

@@ -24,7 +24,7 @@ export class AppError extends Error {
       isOperational: this.isOperational,
       details: this.details,
       timestamp: this.timestamp,
-      stack: this.stack,
+      stack: this.stack
     };
   }
 }
@@ -35,7 +35,7 @@ export class ValidationError extends AppError {
       name: 'ValidationError',
       code: 'VALIDATION_ERROR',
       statusCode: 400,
-      details,
+      details
     });
   }
 }
@@ -45,7 +45,7 @@ export class AuthenticationError extends AppError {
     super(message, {
       name: 'AuthenticationError',
       code: 'AUTH_ERROR',
-      statusCode: 401,
+      statusCode: 401
     });
   }
 }
@@ -55,7 +55,7 @@ export class AuthorizationError extends AppError {
     super(message, {
       name: 'AuthorizationError',
       code: 'FORBIDDEN',
-      statusCode: 403,
+      statusCode: 403
     });
   }
 }
@@ -65,7 +65,7 @@ export class NotFoundError extends AppError {
     super(`${resource} não encontrado`, {
       name: 'NotFoundError',
       code: 'NOT_FOUND',
-      statusCode: 404,
+      statusCode: 404
     });
   }
 }
@@ -75,7 +75,7 @@ export class TimeoutError extends AppError {
     super(`${operation} excedeu o tempo limite de ${timeout}ms`, {
       name: 'TimeoutError',
       code: 'TIMEOUT',
-      statusCode: 408,
+      statusCode: 408
     });
   }
 }
@@ -85,7 +85,7 @@ export class NetworkError extends AppError {
     super(message, {
       name: 'NetworkError',
       code: 'NETWORK_ERROR',
-      statusCode: 503,
+      statusCode: 503
     });
   }
 }
@@ -96,7 +96,7 @@ export class DatabaseError extends AppError {
       name: 'DatabaseError',
       code: 'DATABASE_ERROR',
       statusCode: 500,
-      details,
+      details
     });
   }
 }
@@ -130,9 +130,9 @@ export class ErrorHandler {
       error instanceof AppError
         ? error
         : new AppError(error?.message || 'Erro desconhecido', {
-            code: error?.code || 'UNKNOWN_ERROR',
-            details: error,
-          });
+          code: error?.code || 'UNKNOWN_ERROR',
+          details: error
+        });
 
     // Adiciona ao histórico
     this._addToHistory(errorObj, context);
@@ -245,7 +245,7 @@ export class ErrorHandler {
           window.App.UI.showToast(error.message || 'Ocorreu um erro inesperado.', 'error');
         }
         return { handled: true, action: 'notify_generic' };
-      },
+      }
     };
 
     Object.entries(handlers).forEach(([code, handler]) => {
@@ -259,7 +259,7 @@ export class ErrorHandler {
     this._errorHistory.push({
       error: error.toJSON(),
       context: this._sanitizeContext(context),
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     });
 
     if (this._errorHistory.length > this._maxHistory) {
@@ -274,7 +274,7 @@ export class ErrorHandler {
     logFn(`[${error.code}] ${error.message}`, {
       timestamp: error.timestamp,
       context: this._sanitizeContext(context),
-      stack: error.stack,
+      stack: error.stack
     });
   }
 
